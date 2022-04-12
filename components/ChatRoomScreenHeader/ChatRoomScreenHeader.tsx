@@ -45,8 +45,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignSelf: 'center',
     alignItems: 'center',
-    width: '100%',
+    width: '115%',
     height: '100%',
+    marginTop: 5,
+    marginLeft: 50,
   },
   name: {
     color: 'white',

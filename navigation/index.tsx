@@ -36,6 +36,7 @@ function RootNavigator() {
         options={{
           headerTitle: ChatRoomScreenHeader,
           headerLeft: () => <BackButton />,
+          headerTitleContainerStyle: {marginLeft: -10},
         }}
       />
     </Stack.Navigator>

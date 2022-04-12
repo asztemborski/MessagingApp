@@ -13,15 +13,13 @@ import {
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Reanimated from 'react-native-reanimated';
+import {User} from '../../types';
 import styles from './styles';
-
-type User = {
-  name: string;
-  imageUri: string;
-};
+import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   chatRoom: {
+    id: string;
     users: Array<User>;
     lastMessage: {
       content: string;
@@ -36,11 +34,16 @@ type ContextType = {
 };
 
 const ChatRoomItem: React.FunctionComponent<Props> = ({chatRoom}) => {
+  const navigation = useNavigation();
   const user = chatRoom.users[1];
 
   const translateX = useSharedValue(0);
 
   const ReanimatedPressable = Reanimated.createAnimatedComponent(Pressable);
+
+  const onPress = () => {
+    navigation.navigate('ChatRoomScreen' as never, {id: chatRoom.id} as never);
+  };
 
   const panGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -73,7 +76,9 @@ const ChatRoomItem: React.FunctionComponent<Props> = ({chatRoom}) => {
     <View style={{backgroundColor: '#FF6E6E'}}>
       {/*@ts-expect-error*/}
       <PanGestureHandler onGestureEvent={panGestureEvent}>
-        <ReanimatedPressable style={[styles.container, rStyle]}>
+        <ReanimatedPressable
+          style={[styles.container, rStyle]}
+          onPress={onPress}>
           <Image
             source={{
               uri: user.imageUri,

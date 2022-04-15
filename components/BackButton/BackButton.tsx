@@ -15,7 +15,8 @@ const BackButton: React.FunctionComponent = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
+    marginRight: 10,
     alignItems: 'center',
     marginTop: 5,
   },

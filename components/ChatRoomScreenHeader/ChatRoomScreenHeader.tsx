@@ -48,12 +48,13 @@ const styles = StyleSheet.create({
     width: '115%',
     height: '100%',
     marginTop: 5,
-    marginLeft: 50,
+    marginLeft: 45,
   },
   name: {
     color: 'white',
     fontSize: 14,
     fontWeight: '600',
+    letterSpacing: 1,
   },
   status: {
     color: 'white',

@@ -4,6 +4,10 @@ import ChatRoomItem from '../components/ChatRoomItem/ChatRoomItem';
 import chatRoomsData from '../assets/dummy-data/ChatRooms';
 import ChatListScreenHeader from '../components/ChatListScreenHeader/ChatListScreenHeader';
 
+{
+  /*Chaty*/
+}
+
 const ChatListScreen: React.FunctionComponent = () => {
   return (
     <SafeAreaView style={styles.page}>

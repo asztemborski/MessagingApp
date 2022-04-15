@@ -97,7 +97,8 @@ const ChatRoomItem: React.FunctionComponent<Props> = ({chatRoom}) => {
                 )}
               </View>
 
-              <Text style={{color: 'white'}}>
+              <Text
+                style={{color: chatRoom.newMessages > 0 ? 'white' : 'grey'}}>
                 {chatRoom.lastMessage.createdAt}
               </Text>
             </View>

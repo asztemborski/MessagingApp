@@ -21,7 +21,7 @@ function RootNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: {backgroundColor: Colors.darkGray},
+        headerStyle: {backgroundColor: Colors.green},
       }}>
       <Stack.Screen
         name={'ChatListScreen'}

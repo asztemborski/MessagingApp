@@ -3,10 +3,7 @@ import {Button, FlatList, SafeAreaView, StyleSheet, Text} from 'react-native';
 import ChatRoomItem from '../components/ChatRoomItem/ChatRoomItem';
 import chatRoomsData from '../assets/dummy-data/ChatRooms';
 import ChatListScreenHeader from '../components/ChatListScreenHeader/ChatListScreenHeader';
-
-{
-  /*Chaty*/
-}
+import {Auth} from 'aws-amplify';
 
 const ChatListScreen: React.FunctionComponent = () => {
   return (
@@ -17,6 +14,12 @@ const ChatListScreen: React.FunctionComponent = () => {
         renderItem={({item}) => <ChatRoomItem chatRoom={item} />}
         showsVerticalScrollIndicator={false}
       />
+      <Text
+        onPress={() => {
+          Auth.signOut();
+        }}>
+        Logout
+      </Text>
     </SafeAreaView>
   );
 };

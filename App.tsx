@@ -1,10 +1,12 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import {View} from 'react-native';
-import ChatListScreen from './screens/ChatListScreen';
-import ChatRoomScreen from './screens/ChatRoomScreen';
 import Navigation from './navigation';
-import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import {Amplify} from 'aws-amplify';
+import config from './src/aws-exports';
+import {withAuthenticator} from 'aws-amplify-react-native';
+
+Amplify.configure(config);
 
 const App: React.FunctionComponent = () => {
   return (
@@ -14,4 +16,4 @@ const App: React.FunctionComponent = () => {
   );
 };
 
-export default App;
+export default withAuthenticator(App);

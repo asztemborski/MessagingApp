@@ -9,11 +9,18 @@
       "UnauthRoleName": "amplify-messagingapp-staging-160535-unauthRole",
       "StackName": "amplify-messagingapp-staging-160535",
       "StackId": "arn:aws:cloudformation:us-east-1:801236129863:stack/amplify-messagingapp-staging-160535/e28cffb0-bcd5-11ec-88ec-126015f4248d",
-      "AmplifyAppId": "d2225wklr4tz50"
+      "AmplifyAppId": "d2225wklr4tz50",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-messagingapp-staging-160535-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
         "MessagingApp": {}
+      },
+      "function": {
+        "MessagingAppPostConfirmation": {
+          "deploymentBucketName": "amplify-messagingapp-staging-160535-deployment",
+          "s3Key": "amplify-builds/MessagingAppPostConfirmation-344b48417932442f7361-build.zip"
+        }
       }
     }
   }

@@ -1,10 +1,13 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import Colors from '../../constants/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 
 const ChatListScreenHeader: React.FunctionComponent = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.root}>
       <Text style={styles.title}>All Chat</Text>
@@ -14,6 +17,9 @@ const ChatListScreenHeader: React.FunctionComponent = () => {
           size={24}
           color={'white'}
           style={styles.icon}
+          onPress={() => {
+            navigation.navigate('CreateChatScreen' as never, {} as never);
+          }}
         />
         <Feather
           name={'search'}

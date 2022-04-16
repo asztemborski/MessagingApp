@@ -3,11 +3,17 @@ import React from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 
-const BackButton: React.FunctionComponent = () => {
+interface Props {
+  style?: {};
+}
+
+const BackButton: React.FunctionComponent<Props> = ({style}) => {
   const navigation = useNavigation();
 
   return (
-    <Pressable style={styles.container} onPress={() => navigation.goBack()}>
+    <Pressable
+      style={[styles.container, style]}
+      onPress={() => navigation.goBack()}>
       <Feather name={'arrow-left'} size={24} color={'white'} />
     </Pressable>
   );
@@ -15,7 +21,6 @@ const BackButton: React.FunctionComponent = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 10,
     marginRight: 10,
     alignItems: 'center',
     marginTop: 5,

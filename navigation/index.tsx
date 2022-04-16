@@ -6,6 +6,7 @@ import ChatRoomScreenHeader from '../components/ChatRoomScreenHeader/ChatRoomScr
 import Colors from '../constants/Colors';
 import ChatListScreen from '../screens/ChatListScreen';
 import ChatRoomScreen from '../screens/ChatRoomScreen';
+import CreateChatScreen from '../screens/CreateChatScreen';
 
 export default function Navigation() {
   return (
@@ -35,8 +36,15 @@ function RootNavigator() {
         component={ChatRoomScreen}
         options={{
           headerTitle: ChatRoomScreenHeader,
-          headerLeft: () => <BackButton />,
+          headerLeft: () => <BackButton style={{paddingHorizontal: 10}} />,
           headerTitleContainerStyle: {marginLeft: -10},
+        }}
+      />
+      <Stack.Screen
+        name="CreateChatScreen"
+        component={CreateChatScreen}
+        options={{
+          headerShown: false,
         }}
       />
     </Stack.Navigator>

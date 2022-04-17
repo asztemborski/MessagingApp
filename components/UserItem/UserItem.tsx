@@ -1,37 +1,16 @@
 import React from 'react';
 import {Text, View, Image, Pressable} from 'react-native';
-import {
-  useAnimatedGestureHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Reanimated from 'react-native-reanimated';
 import {User} from '../../types';
 import styles from './styles';
 import {useNavigation} from '@react-navigation/native';
 
 interface Props {
-  chatRoom: {
-    id: string;
-    users: Array<User>;
-    lastMessage: {
-      content: string;
-      createdAt: string;
-    };
-    newMessages: number;
-  };
+  user: User;
 }
 
-const UserItem: React.FunctionComponent<Props> = ({chatRoom}) => {
+const UserItem: React.FunctionComponent<Props> = ({user}) => {
   const navigation = useNavigation();
-  const user = chatRoom.users[1];
+
   return (
     <View style={{backgroundColor: '#FF6E6E'}}>
       <Pressable style={styles.container}>

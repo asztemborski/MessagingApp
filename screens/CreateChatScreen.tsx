@@ -1,17 +1,29 @@
 import React from 'react';
-import {Button, FlatList, SafeAreaView, StyleSheet, Text} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet, Text} from 'react-native';
 import UserItem from '../components/UserItem/UserItem';
-import chatRoomsData from '../assets/dummy-data/ChatRooms';
+import Users from '../assets/dummy-data/Users';
 import CreateChatHeader from '../components/CreateChatHeader/CreateChatHeader';
 
 const CreateChatScreen: React.FunctionComponent = () => {
   return (
     <SafeAreaView style={styles.page}>
       <CreateChatHeader />
+
       <FlatList
-        data={chatRoomsData}
-        renderItem={({item}) => <UserItem chatRoom={item} />}
+        data={Users}
+        renderItem={({item}) => <UserItem user={item} />}
         showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 16,
+              paddingHorizontal: 10,
+              marginTop: 10,
+            }}>
+            All Users
+          </Text>
+        }
       />
     </SafeAreaView>
   );

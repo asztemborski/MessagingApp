@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, FlatList, SafeAreaView, StyleSheet, Text} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet, Text} from 'react-native';
 import ChatRoomItem from '../components/ChatRoomItem/ChatRoomItem';
 import chatRoomsData from '../assets/dummy-data/ChatRooms';
 import ChatListScreenHeader from '../components/ChatListScreenHeader/ChatListScreenHeader';

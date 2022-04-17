@@ -1,16 +1,24 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatList, SafeAreaView, StyleSheet, Text} from 'react-native';
+import {DataStore} from '@aws-amplify/datastore';
+import {User} from '../src/models';
 import UserItem from '../components/UserItem/UserItem';
-import Users from '../assets/dummy-data/Users';
+
 import CreateChatHeader from '../components/CreateChatHeader/CreateChatHeader';
 
 const CreateChatScreen: React.FunctionComponent = () => {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    DataStore.query(User).then(setUsers);
+  }, []);
+
   return (
     <SafeAreaView style={styles.page}>
       <CreateChatHeader />
 
       <FlatList
-        data={Users}
+        data={users}
         renderItem={({item}) => <UserItem user={item} />}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={

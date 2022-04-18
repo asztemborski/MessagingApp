@@ -1,5 +1,7 @@
-import React from 'react';
-import {Text, View, Image, Pressable} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {DataStore} from 'aws-amplify';
+import {ChatRoomUser, User} from '../../src/models';
+import {Text, View, Image, Pressable, ActivityIndicator} from 'react-native';
 import {
   useAnimatedGestureHandler,
   useAnimatedStyle,
@@ -13,20 +15,13 @@ import {
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Reanimated from 'react-native-reanimated';
-import {User} from '../../types';
+import {ChatRoom} from '../../src/models';
 import styles from './styles';
 import {useNavigation} from '@react-navigation/native';
+import {Auth} from 'aws-amplify';
 
 interface Props {
-  chatRoom: {
-    id: string;
-    users: Array<User>;
-    lastMessage: {
-      content: string;
-      createdAt: string;
-    };
-    newMessages: number;
-  };
+  chatRoom: ChatRoom;
 }
 
 type ContextType = {
@@ -34,12 +29,34 @@ type ContextType = {
 };
 
 const ChatRoomItem: React.FunctionComponent<Props> = ({chatRoom}) => {
-  const navigation = useNavigation();
-  const user = chatRoom.users[1];
-
+  const [user, setUser] = useState<User | null>(null); //displayed user
   const translateX = useSharedValue(0);
 
   const ReanimatedPressable = Reanimated.createAnimatedComponent(Pressable);
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const fetchedUsers = (await DataStore.query(ChatRoomUser))
+        .filter(chatRoomUser => chatRoomUser.chatRoom.id === chatRoom.id)
+        .map(chatRoomUser => chatRoomUser.user);
+
+      const authUser = await Auth.currentAuthenticatedUser();
+      setUser(
+        fetchedUsers.find(user => user.id !== authUser.attributes.sub) || null,
+      );
+    };
+    fetchUsers();
+  }, []);
+
+  const newMessages = () => {
+    if (chatRoom.newMessages != null) {
+      return chatRoom.newMessages > 0;
+    } else {
+      return false;
+    }
+  };
 
   const onPress = () => {
     navigation.navigate('ChatRoomScreen' as never, {id: chatRoom.id} as never);
@@ -72,6 +89,11 @@ const ChatRoomItem: React.FunctionComponent<Props> = ({chatRoom}) => {
       ],
     };
   });
+
+  if (!user) {
+    return <ActivityIndicator />;
+  }
+
   return (
     <View style={{backgroundColor: '#FF6E6E'}}>
       {/*@ts-expect-error*/}
@@ -92,23 +114,17 @@ const ChatRoomItem: React.FunctionComponent<Props> = ({chatRoom}) => {
             <View style={styles.row}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text style={styles.name}>{user.name}</Text>
-                {chatRoom.newMessages > 0 && (
-                  <View style={styles.newMessageIcon} />
-                )}
+                {newMessages() && <View style={styles.newMessageIcon} />}
               </View>
 
-              <Text
-                style={{color: chatRoom.newMessages > 0 ? 'white' : 'grey'}}>
-                {chatRoom.lastMessage.createdAt}
+              <Text style={{color: newMessages() ? 'white' : 'grey'}}>
+                {chatRoom.LastMessage?.createdAt}
               </Text>
             </View>
             <Text
-              style={[
-                styles.text,
-                chatRoom.newMessages > 0 && {color: 'white'},
-              ]}
+              style={[styles.text, newMessages() && {color: 'white'}]}
               numberOfLines={1}>
-              {chatRoom.lastMessage.content}
+              {chatRoom.LastMessage?.content}
             </Text>
           </View>
         </ReanimatedPressable>

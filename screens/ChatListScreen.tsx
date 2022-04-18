@@ -19,7 +19,6 @@ const ChatListScreen: React.FunctionComponent = () => {
         )
         .map(ChatRoomUser => ChatRoomUser.chatRoom);
       setChatRooms(chatRooms);
-      console.log(chatRooms);
     };
     fetchChatRooms();
   }, []);

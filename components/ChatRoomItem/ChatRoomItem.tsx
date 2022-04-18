@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {DataStore} from 'aws-amplify';
-import {ChatRoomUser, User} from '../../src/models';
+import {ChatRoomUser, Message, User} from '../../src/models';
 import {Text, View, Image, Pressable, ActivityIndicator} from 'react-native';
 import {
   useAnimatedGestureHandler,
@@ -30,6 +30,9 @@ type ContextType = {
 
 const ChatRoomItem: React.FunctionComponent<Props> = ({chatRoom}) => {
   const [user, setUser] = useState<User | null>(null); //displayed user
+  const [lastMessage, setLastMessage] = useState<Message | undefined>(
+    undefined,
+  );
   const translateX = useSharedValue(0);
 
   const ReanimatedPressable = Reanimated.createAnimatedComponent(Pressable);
@@ -48,6 +51,14 @@ const ChatRoomItem: React.FunctionComponent<Props> = ({chatRoom}) => {
       );
     };
     fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    if (!chatRoom.chatRoomLastMessageId) return;
+
+    DataStore.query(Message, chatRoom.chatRoomLastMessageId).then(
+      setLastMessage,
+    );
   }, []);
 
   const newMessages = () => {
@@ -118,13 +129,13 @@ const ChatRoomItem: React.FunctionComponent<Props> = ({chatRoom}) => {
               </View>
 
               <Text style={{color: newMessages() ? 'white' : 'grey'}}>
-                {chatRoom.LastMessage?.createdAt}
+                {lastMessage?.createdAt}
               </Text>
             </View>
             <Text
               style={[styles.text, newMessages() && {color: 'white'}]}
               numberOfLines={1}>
-              {chatRoom.LastMessage?.content}
+              {lastMessage?.content}
             </Text>
           </View>
         </ReanimatedPressable>

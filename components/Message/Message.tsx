@@ -1,23 +1,30 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, Text, View} from 'react-native';
 import styles from './styles';
 import Colors from '../../constants/Colors';
+import {Message as MessageModel, User} from '../../src/models';
+import {Auth, DataStore} from 'aws-amplify';
 
 interface Props {
-  message: {
-    content: string;
-    createdAt: string;
-    user: {
-      id: string;
-      name: string;
-    };
-  };
+  message: MessageModel;
 }
 
-const myID = 'u1';
-
 const Message: React.FunctionComponent<Props> = ({message}) => {
-  const isMe = message.user.id === myID;
+  const [user, setUser] = useState<User | undefined>(undefined);
+  const [isMe, setIsMe] = useState<boolean>(true);
+
+  useEffect(() => {
+    DataStore.query(User, message.userID).then(setUser);
+  }, []);
+
+  useEffect(() => {
+    const checkIfMe = async () => {
+      if (!user) return;
+      const authUser = await Auth.currentAuthenticatedUser();
+      setIsMe(user.id === authUser.attributes.sub);
+    };
+    checkIfMe();
+  }, [User]);
 
   return (
     <View style={styles.container}>

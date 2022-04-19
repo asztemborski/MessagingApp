@@ -22,6 +22,16 @@ const ChatRoomScreen: React.FunctionComponent = () => {
     fetchMessages();
   }, [chatRoom]);
 
+  useEffect(() => {
+    const subscription = DataStore.observe(MessageModel).subscribe(msg => {
+      if (msg.model === MessageModel && msg.opType === 'INSERT') {
+        setMessages(previousMessages => [msg.element, ...previousMessages]);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   const fetchChatRoom = async () => {
     if (!route.params?.id) {
       console.log('No chatroom id provided');

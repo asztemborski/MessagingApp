@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image, Text, View} from 'react-native';
+import {ActivityIndicator, Image, Text, View} from 'react-native';
 import styles from './styles';
 import Colors from '../../constants/Colors';
 import {Message as MessageModel, User} from '../../src/models';
@@ -11,7 +11,7 @@ interface Props {
 
 const Message: React.FunctionComponent<Props> = ({message}) => {
   const [user, setUser] = useState<User | undefined>(undefined);
-  const [isMe, setIsMe] = useState<boolean>(true);
+  const [isMe, setIsMe] = useState<boolean | undefined>(false);
 
   useEffect(() => {
     DataStore.query(User, message.userID).then(setUser);
@@ -24,7 +24,9 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
       setIsMe(user.id === authUser.attributes.sub);
     };
     checkIfMe();
-  }, [User]);
+  }, [user]);
+
+  if (!user) return <ActivityIndicator />;
 
   return (
     <View style={styles.container}>

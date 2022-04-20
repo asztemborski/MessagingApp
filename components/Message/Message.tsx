@@ -12,6 +12,9 @@ interface Props {
 const Message: React.FunctionComponent<Props> = ({message}) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [isMe, setIsMe] = useState<boolean | undefined>(false);
+  const [prevMsgSameOwner, setPrevMsgSameOwner] = useState<boolean | null>(
+    null,
+  );
 
   useEffect(() => {
     DataStore.query(User, message.userID).then(setUser);
@@ -23,26 +26,31 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
       const authUser = await Auth.currentAuthenticatedUser();
       setIsMe(user.id === authUser.attributes.sub);
     };
+    setPrevMsgSameOwner(message.prevMsgSameOwner);
+
     checkIfMe();
   }, [user]);
 
-  if (!user) return <ActivityIndicator />;
-
+  if (!user) return null;
   return (
-    <View style={styles.container}>
-      {!isMe && (
+    <View style={[styles.container]}>
+      {!isMe && !prevMsgSameOwner ? (
         <Image
           source={{
             uri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.jpg',
           }}
           style={styles.image}
         />
+      ) : (
+        <View style={styles.image} />
       )}
       <View
         style={[
           styles.textContainer,
           {
             backgroundColor: isMe ? Colors.green : Colors.darkGray,
+            marginVertical: prevMsgSameOwner ? 2 : 10,
+            marginBottom: 2,
             marginLeft: isMe ? 'auto' : 10,
           },
         ]}>

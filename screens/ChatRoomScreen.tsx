@@ -45,6 +45,10 @@ const ChatRoomScreen: React.FunctionComponent = () => {
     }
   };
 
+  useEffect(() => {
+    setMessages(isPrevMsgSameOwner(messages));
+  }, [messages]);
+
   const fetchMessages = async () => {
     if (!chatRoom) return;
 
@@ -55,7 +59,20 @@ const ChatRoomScreen: React.FunctionComponent = () => {
         sort: message => message.createdAt(SortDirection.DESCENDING),
       },
     );
-    setMessages(fetchedMessages);
+
+    setMessages(isPrevMsgSameOwner(fetchedMessages));
+  };
+
+  const isPrevMsgSameOwner = (messages: Array<MessageModel>) => {
+    for (let i = 0; i < messages.length - 1; i++) {
+      if (messages[i].userID === messages[i + 1].userID) {
+        messages[i] = {...messages[i], prevMsgSameOwner: true};
+      } else {
+        messages[i] = {...messages[i], prevMsgSameOwner: false};
+      }
+    }
+
+    return messages;
   };
 
   navigation.setOptions({title: 'Elon Musk'});

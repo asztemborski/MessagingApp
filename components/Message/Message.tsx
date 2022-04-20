@@ -4,6 +4,7 @@ import styles from './styles';
 import Colors from '../../constants/Colors';
 import {Message as MessageModel, User} from '../../src/models';
 import {Auth, DataStore} from 'aws-amplify';
+import LoadingMessage from '../LoadingMessage/LoadingMessage';
 
 interface Props {
   message: MessageModel;
@@ -31,7 +32,7 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
     checkIfMe();
   }, [user]);
 
-  if (!user) return null;
+  if (!user) return <LoadingMessage />;
   return (
     <View style={[styles.container]}>
       {!isMe && !prevMsgSameOwner ? (

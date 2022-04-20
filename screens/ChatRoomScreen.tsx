@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, StyleSheet} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import Message from '../components/Message/Message';
 import {FlatList} from 'react-native-gesture-handler';
 import MessageInput from '../components/MessageInput/MessageInput';
@@ -7,6 +7,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {DataStore, SortDirection} from 'aws-amplify';
 import {Message as MessageModel, ChatRoom} from '../src/models';
+import Colors from '../constants/Colors';
 
 const ChatRoomScreen: React.FunctionComponent = () => {
   const [messages, setMessages] = useState<MessageModel[]>([]);
@@ -78,7 +79,14 @@ const ChatRoomScreen: React.FunctionComponent = () => {
   navigation.setOptions({title: 'Elon Musk'});
 
   if (!chatRoom) {
-    return <ActivityIndicator />;
+    return (
+      <View
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: Colors.background,
+        }}></View>
+    );
   }
 
   return (

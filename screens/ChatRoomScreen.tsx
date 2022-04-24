@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {, StyleSheet, View} from 'react-native';
 import Message from '../components/Message/Message';
 import {FlatList} from 'react-native-gesture-handler';
 import MessageInput from '../components/MessageInput/MessageInput';
@@ -75,8 +75,6 @@ const ChatRoomScreen: React.FunctionComponent = () => {
 
     return messages;
   };
-
-  navigation.setOptions({title: 'Elon Musk'});
 
   if (!chatRoom) {
     return (

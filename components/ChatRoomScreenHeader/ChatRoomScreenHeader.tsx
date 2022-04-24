@@ -1,18 +1,36 @@
-import React, {ReactNode} from 'react';
+import React, {ReactNode, useEffect, useState} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import {DataStore, Auth} from 'aws-amplify';
+import {User, ChatRoomUser} from '../../src/models';
 
 interface Props {
-  children: ReactNode;
+  id: string;
 }
 
-const ChatRoomScreenHeader: React.FunctionComponent<Props> = ({children}) => {
+const ChatRoomScreenHeader: React.FunctionComponent<Props> = ({id}) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const fetchedUsers = (await DataStore.query(ChatRoomUser))
+        .filter(chatRoomUser => chatRoomUser.chatRoom.id === id)
+        .map(chatRoomUser => chatRoomUser.user);
+
+      const authUser = await Auth.currentAuthenticatedUser();
+      setUser(
+        fetchedUsers.find(user => user.id !== authUser.attributes.sub) || null,
+      );
+    };
+    fetchUserData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.name}>{children}</Text>
+        <Text style={styles.name}>{user?.name}</Text>
         <Text style={styles.status}>Active now</Text>
       </View>
       <View style={styles.iconsContainer}>

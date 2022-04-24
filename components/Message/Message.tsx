@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Image, Text, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 import styles from './styles';
 import Colors from '../../constants/Colors';
 import {Message as MessageModel, User} from '../../src/models';
 import {Auth, DataStore} from 'aws-amplify';
-import LoadingMessage from '../LoadingMessage/LoadingMessage';
 
 interface Props {
   message: MessageModel;
@@ -12,7 +11,7 @@ interface Props {
 
 const Message: React.FunctionComponent<Props> = ({message}) => {
   const [user, setUser] = useState<User | undefined>(undefined);
-  const [isMe, setIsMe] = useState<boolean | undefined>(false);
+  const [isMe, setIsMe] = useState<boolean | undefined | null>(null);
   const [prevMsgSameOwner, setPrevMsgSameOwner] = useState<boolean | null>(
     null,
   );
@@ -32,13 +31,14 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
     checkIfMe();
   }, [user]);
 
-  if (!user) return <LoadingMessage />;
+  if (!user) return null;
+
   return (
     <View style={[styles.container]}>
       {!isMe && !prevMsgSameOwner ? (
         <Image
           source={{
-            uri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.jpg',
+            uri: user.imageUri,
           }}
           style={styles.image}
         />

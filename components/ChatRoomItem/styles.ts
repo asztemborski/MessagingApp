@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 16,
     height: 16,
-    backgroundColor: 'white',
+
     borderRadius: 8,
     left: 45,
     top: 45,
@@ -30,12 +30,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statusContent: {
-    width: 13,
-    height: 13,
+    width: 15,
+    height: 15,
     backgroundColor: '#2cb9b0',
     borderRadius: 7,
     borderColor: 'black',
-    borderWidth: 1.5,
+    borderWidth: 3,
   },
   rightContainer: {
     paddingLeft: 5,

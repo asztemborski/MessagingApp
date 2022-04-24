@@ -3,7 +3,7 @@ import {Text, View} from 'react-native';
 import styles from './styles';
 
 const LoadingMessage: React.FunctionComponent = () => {
-  const RandomWidth = Math.floor(Math.random() * (60 - 10)) + 10;
+  const RandomWidth = Math.floor(Math.random() * (60 - 20)) + 10;
   const RandomHeight = Math.floor(Math.random() * (60 - 30) + 30);
   const isMine = Math.random() < 0.5;
   return (

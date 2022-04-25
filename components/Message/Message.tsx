@@ -12,8 +12,8 @@ interface Props {
 const Message: React.FunctionComponent<Props> = ({message}) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [isMe, setIsMe] = useState<boolean | undefined | null>(null);
-  const [prevMsgSameOwner, setPrevMsgSameOwner] = useState<boolean | null>(
-    null,
+  const [prevMsgSameOwner, setPrevMsgSameOwner] = useState<boolean | undefined>(
+    undefined,
   );
 
   useEffect(() => {

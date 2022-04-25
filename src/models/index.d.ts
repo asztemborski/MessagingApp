@@ -3,6 +3,7 @@ import {
   MutableModel,
   PersistentModelConstructor,
 } from '@aws-amplify/datastore';
+import {Image, ImageSourcePropType} from 'react-native';
 
 type MessageMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
@@ -27,7 +28,7 @@ export declare class Message {
   readonly chatroomID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  readonly prevMsgSameOwner: boolean;
+  readonly prevMsgSameOwner?: boolean;
   constructor(init: ModelInit<Message, MessageMetaData>);
   static copyOf(
     source: Message,
@@ -58,7 +59,7 @@ export declare class ChatRoom {
 export declare class User {
   readonly id: string;
   readonly name: string;
-  readonly imageUri?: string | null;
+  readonly imageUri?: string | undefined;
   readonly status?: string | null;
   readonly Messages?: (Message | null)[] | null;
   readonly chatrooms?: (ChatRoomUser | null)[] | null;

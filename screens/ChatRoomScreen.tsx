@@ -1,19 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Message from '../components/Message/Message';
 import {FlatList} from 'react-native-gesture-handler';
 import MessageInput from '../components/MessageInput/MessageInput';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {useRoute, useNavigation} from '@react-navigation/native';
+import {useRoute, RouteProp} from '@react-navigation/native';
 import {DataStore, SortDirection} from 'aws-amplify';
 import {Message as MessageModel, ChatRoom} from '../src/models';
 import Colors from '../constants/Colors';
+import {RootStackParamList} from '../navigation';
+
+type RouteProps = RouteProp<RootStackParamList, 'ChatRoomScreen'>;
 
 const ChatRoomScreen: React.FunctionComponent = () => {
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [chatRoom, setChatRoom] = useState<ChatRoom | null>(null);
-  const route = useRoute();
-  const navigation = useNavigation();
+  const route: RouteProps = useRoute();
 
   useEffect(() => {
     fetchChatRoom();

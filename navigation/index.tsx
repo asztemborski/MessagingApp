@@ -16,7 +16,13 @@ export default function Navigation() {
   );
 }
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+  ChatListScreen: undefined;
+  ChatRoomScreen: {id: string};
+  CreateChatScreen: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (

@@ -10,12 +10,10 @@ import {Message as MessageModel, ChatRoom} from '../src/models';
 import Colors from '../constants/Colors';
 import {RootStackParamList} from '../navigation';
 
-type RouteProps = RouteProp<RootStackParamList, 'ChatRoomScreen'>;
-
 const ChatRoomScreen: React.FunctionComponent = () => {
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [chatRoom, setChatRoom] = useState<ChatRoom | null>(null);
-  const route: RouteProps = useRoute();
+  const route: RouteProp<RootStackParamList> = useRoute();
 
   useEffect(() => {
     fetchChatRoom();

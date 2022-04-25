@@ -17,20 +17,6 @@ interface Props {
 const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
   const [message, setMessage] = useState('');
   const [isEmojiPickerOpened, setIsEmojiPickerOpened] = useState(false);
-  const [keyboardShow, setKeyboardShow] = useState(false);
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboardShow(true);
-    });
-    Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardShow(false);
-    });
-  });
-
-  useEffect(() => {
-    if (isEmojiPickerOpened === true) Keyboard.dismiss();
-  });
 
   const sendMessage = async () => {
     const user = await Auth.currentAuthenticatedUser();

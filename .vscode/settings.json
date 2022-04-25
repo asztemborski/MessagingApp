@@ -8,5 +8,5 @@
     "amplify/backend/amplify-meta.json": true,
     "amplify/backend/awscloudformation": true
   },
-  "cSpell.words": ["chatrooms", "Entypo", "Ionicons"]
+  "cSpell.words": ["chatbubble", "chatrooms", "Entypo", "Ionicons"]
 }

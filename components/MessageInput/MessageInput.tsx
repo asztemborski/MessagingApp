@@ -8,15 +8,73 @@ import {DataStore, Auth} from 'aws-amplify';
 import {Message, ChatRoom} from '../../src/models';
 import Colors from '../../constants/Colors';
 import styles from './styles';
-import EmojiSelector from 'react-native-emoji-selector';
+import AttachmentsMenu from '../AttachmentsMenu/AttachmentsMenu';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ImagePicker from 'react-native-image-crop-picker';
 
 interface Props {
   chatRoom: ChatRoom;
 }
 
 const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
+  const AttachMenuButtons = [
+    {
+      name: 'Gallery',
+      bgColor: '#399DF8',
+      icon: <MaterialIcons name="photo" size={20} color={'white'} />,
+      onPress: () => {
+        ImagePicker.openPicker({
+          width: 300,
+          height: 400,
+          cropping: false,
+        }).then(image => {
+          console.log(image);
+        });
+      },
+    },
+    {
+      name: 'Camera',
+      bgColor: '#F81B68',
+      icon: <MaterialIcons name="camera-alt" size={20} color={'white'} />,
+      onPress: () => {
+        ImagePicker.openCamera({
+          width: 300,
+          height: 400,
+          cropping: false,
+        }).then(image => {
+          console.log(image);
+        });
+      },
+    },
+    {
+      name: 'Audio',
+      bgColor: '#2EC8AD',
+      icon: <FontAwesome name="microphone" size={20} color={'white'} />,
+    },
+    {
+      name: 'GIF',
+      bgColor: '#F67836',
+      icon: <MaterialIcons name="gif" size={40} color={'white'} />,
+    },
+    {
+      name: 'Files',
+      bgColor: '#F8B50A',
+      icon: <Entypo name="attachment" size={20} color={'white'} />,
+    },
+    {
+      name: 'Location',
+      bgColor: '#893AF8',
+      icon: <MaterialIcons name="location-pin" size={25} color={'white'} />,
+    },
+    {
+      name: 'Plan',
+      bgColor: Colors.lightGreen,
+      icon: <MaterialIcons name="event" size={20} color={'white'} />,
+    },
+  ];
+
   const [message, setMessage] = useState('');
-  const [isEmojiPickerOpened, setIsEmojiPickerOpened] = useState(false);
+  const [showAttachMenu, setShowAttachMenu] = useState(false);
 
   const sendMessage = async () => {
     const user = await Auth.currentAuthenticatedUser();
@@ -31,7 +89,6 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
 
     updateLastMessage(newMessage);
     setMessage('');
-    setIsEmojiPickerOpened(false);
   };
 
   const updateLastMessage = async (newMessage: Message) => {
@@ -44,7 +101,7 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
 
   return (
     <KeyboardAvoidingView
-      style={[styles.container, {height: isEmojiPickerOpened ? '50%' : 'auto'}]}
+      style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={{flexDirection: 'row'}}>
         <View style={styles.inputContainer}>
@@ -65,14 +122,7 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
               right: 12.7,
             }}
           />
-          <FontAwesome5
-            name={'smile'}
-            size={28}
-            color={Colors.darkGray}
-            onPress={() => {
-              setIsEmojiPickerOpened(currentValue => !currentValue);
-            }}
-          />
+          <FontAwesome5 name={'smile'} size={28} color={Colors.darkGray} />
         </View>
         <View style={styles.buttonContainer}>
           {message ? (
@@ -83,20 +133,18 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
               onPress={sendMessage}
             />
           ) : (
-            <Entypo name={'plus'} size={25} color={Colors.green} />
+            <Entypo
+              name={'plus'}
+              size={25}
+              color={Colors.green}
+              onPress={() => {
+                setShowAttachMenu(currentValue => !currentValue);
+              }}
+            />
           )}
         </View>
       </View>
-
-      {isEmojiPickerOpened && (
-        <EmojiSelector
-          onEmojiSelected={emoji => {
-            setMessage(currentMessage => currentMessage + emoji);
-          }}
-          showSearchBar={false}
-          showHistory={true}
-        />
-      )}
+      {showAttachMenu && <AttachmentsMenu buttons={AttachMenuButtons} />}
     </KeyboardAvoidingView>
   );
 };

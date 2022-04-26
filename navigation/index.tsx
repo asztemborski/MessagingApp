@@ -77,20 +77,20 @@ const BottomTabNavigator = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          position: 'absolute',
           backgroundColor: Colors.darkGray,
           height: '10%',
           borderTopWidth: 0,
         },
         tabBarShowLabel: false,
         tabBarActiveTintColor: Colors.green,
+        tabBarInactiveTintColor: '#BEBEC0',
       }}>
       <BottomTab.Screen
         name="ProfileScreen"
         component={ProfileScreen}
         options={{
           tabBarIcon: ({color}) => (
-            <MaterialCommunityIcons name={'account'} size={30} color={color} />
+            <MaterialCommunityIcons name={'home'} size={30} color={color} />
           ),
         }}
       />

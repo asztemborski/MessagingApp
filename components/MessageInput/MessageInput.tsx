@@ -1,5 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {View, KeyboardAvoidingView, Platform, Keyboard} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  Image,
+  Pressable,
+} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -28,7 +34,8 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
           height: 400,
           cropping: false,
         }).then(image => {
-          console.log(image);
+          setImageMessage(image.path);
+          setShowAttachMenu(false);
         });
       },
     },
@@ -42,7 +49,8 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
           height: 400,
           cropping: false,
         }).then(image => {
-          console.log(image);
+          setImageMessage(image.path);
+          setShowAttachMenu(false);
         });
       },
     },
@@ -75,6 +83,7 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
 
   const [message, setMessage] = useState('');
   const [showAttachMenu, setShowAttachMenu] = useState(false);
+  const [imageMessage, setImageMessage] = useState<string | null>(null);
 
   const sendMessage = async () => {
     const user = await Auth.currentAuthenticatedUser();
@@ -104,28 +113,38 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={{flexDirection: 'row'}}>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={{color: 'white', flex: 1}}
-            placeholder={'Type your message'}
-            placeholderTextColor={'grey'}
-            value={message}
-            onChangeText={setMessage}
-          />
-          <View
-            style={{
-              position: 'absolute',
-              width: 22,
-              borderRadius: 10,
-              height: 22,
-              backgroundColor: Colors.green,
-              right: 12.7,
-            }}
-          />
-          <FontAwesome5 name={'smile'} size={28} color={Colors.darkGray} />
+        <View style={{flexDirection: 'row'}}>
+          <View style={styles.inputContainer}>
+            {imageMessage && (
+              <Pressable
+                onLongPress={() => {
+                  setImageMessage(null);
+                }}>
+                <Image
+                  source={{uri: imageMessage}}
+                  style={styles.imageMessage}
+                />
+              </Pressable>
+            )}
+            <TextInput
+              style={styles.textInput}
+              placeholder={'Type your message'}
+              placeholderTextColor={'grey'}
+              value={message}
+              onChangeText={setMessage}
+              multiline={true}
+            />
+            <View style={styles.emojiIconBackground} />
+            <FontAwesome5
+              name={'smile'}
+              size={28}
+              color={Colors.darkGray}
+              style={{alignSelf: 'flex-end', bottom: 10}}
+            />
+          </View>
         </View>
         <View style={styles.buttonContainer}>
-          {message ? (
+          {message || imageMessage ? (
             <MaterialIcons
               name={'keyboard-arrow-up'}
               size={30}

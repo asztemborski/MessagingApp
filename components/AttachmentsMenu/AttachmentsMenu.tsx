@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import Colors from '../../constants/Colors';
 import AttachmentButton from './AttachmentButton';
@@ -22,6 +22,7 @@ const AttachmentsMenu: React.FunctionComponent<Props> = ({buttons}) => {
         data={buttons}
         renderItem={({item}) => <AttachmentButton data={item} />}
         horizontal
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   );

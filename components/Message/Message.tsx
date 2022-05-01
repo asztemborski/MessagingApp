@@ -13,9 +13,6 @@ interface Props {
 const Message: React.FunctionComponent<Props> = ({message}) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [isMe, setIsMe] = useState<boolean | undefined | null>(null);
-  const [prevMsgSameOwner, setPrevMsgSameOwner] = useState<boolean | undefined>(
-    undefined,
-  );
 
   useEffect(() => {
     DataStore.query(User, message.userID).then(setUser);
@@ -27,7 +24,6 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
       const authUser = await Auth.currentAuthenticatedUser();
       setIsMe(user.id === authUser.attributes.sub);
     };
-    setPrevMsgSameOwner(message.prevMsgSameOwner);
 
     checkIfMe();
   }, [user]);
@@ -36,7 +32,7 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
 
   return (
     <View style={[styles.container]}>
-      {!isMe && !prevMsgSameOwner ? (
+      {!isMe && !message.prevMsgSameOwner ? (
         <Image
           source={{
             uri: user.imageUri,
@@ -51,26 +47,26 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
           styles.textContainer,
           {
             backgroundColor: isMe ? Colors.green : Colors.darkGray,
-            marginVertical: prevMsgSameOwner ? 2 : 10,
+            marginVertical: message.prevMsgSameOwner ? 2 : 10,
             marginBottom: 2,
             marginLeft: isMe ? 'auto' : 10,
           },
         ]}>
-        {message.image && (
+        {message.image ? (
           <S3Image
             imgKey={message.image}
             style={{
               width: '100%',
               aspectRatio: 4 / 3,
-              marginBottom: 10,
+              marginBottom: message.content != '' ? 10 : 0,
               borderRadius: 5,
             }}
             resizeMode={'contain'}
           />
-        )}
-        {message.content != '' ? (
-          <Text style={styles.text}>{message.content}</Text>
         ) : null}
+        {!!message.content && (
+          <Text style={styles.text}>{message.content}</Text>
+        )}
       </View>
     </View>
   );

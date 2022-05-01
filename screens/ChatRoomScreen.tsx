@@ -24,6 +24,10 @@ const ChatRoomScreen: React.FunctionComponent = () => {
   }, [chatRoom]);
 
   useEffect(() => {
+    setMessages(isPrevMsgSameOwner(messages));
+  }, [messages]);
+
+  useEffect(() => {
     const subscription = DataStore.observe(MessageModel).subscribe(msg => {
       if (msg.model === MessageModel && msg.opType === 'INSERT') {
         setMessages(previousMessages => [msg.element, ...previousMessages]);
@@ -46,9 +50,17 @@ const ChatRoomScreen: React.FunctionComponent = () => {
     }
   };
 
-  useEffect(() => {
-    setMessages(isPrevMsgSameOwner(messages));
-  }, [messages]);
+  const isPrevMsgSameOwner = (messages: Array<MessageModel>) => {
+    for (let i = 0; i < messages.length - 1; i++) {
+      if (messages[i].userID === messages[i + 1].userID) {
+        messages[i] = {...messages[i], prevMsgSameOwner: true};
+      } else {
+        messages[i] = {...messages[i], prevMsgSameOwner: false};
+      }
+    }
+
+    return messages;
+  };
 
   const fetchMessages = async () => {
     if (!chatRoom) return;
@@ -62,18 +74,6 @@ const ChatRoomScreen: React.FunctionComponent = () => {
     );
 
     setMessages(isPrevMsgSameOwner(fetchedMessages));
-  };
-
-  const isPrevMsgSameOwner = (messages: Array<MessageModel>) => {
-    for (let i = 0; i < messages.length - 1; i++) {
-      if (messages[i].userID === messages[i + 1].userID) {
-        messages[i] = {...messages[i], prevMsgSameOwner: true};
-      } else {
-        messages[i] = {...messages[i], prevMsgSameOwner: false};
-      }
-    }
-
-    return messages;
   };
 
   if (!chatRoom) {

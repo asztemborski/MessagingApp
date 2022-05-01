@@ -1,0 +1,13 @@
+{
+  "resourceName": "s3e4a21499",
+  "policyUUID": "e4a21499",
+  "bucketName": "messagingapp5c2cc48671444389bf8f8c6fe6238ccf",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

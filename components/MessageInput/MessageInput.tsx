@@ -10,13 +10,15 @@ import {TextInput} from 'react-native-gesture-handler';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {DataStore, Auth} from 'aws-amplify';
+import {DataStore, Auth, Storage} from 'aws-amplify';
 import {Message, ChatRoom} from '../../src/models';
 import Colors from '../../constants/Colors';
 import styles from './styles';
 import AttachmentsMenu from '../AttachmentsMenu/AttachmentsMenu';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from 'react-native-image-crop-picker';
+import uuid from 'react-native-uuid';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 interface Props {
   chatRoom: ChatRoom;
@@ -85,6 +87,16 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
   const [showAttachMenu, setShowAttachMenu] = useState(false);
   const [imageMessage, setImageMessage] = useState<string | null>(null);
 
+  const onSendPressed = () => {
+    if (imageMessage) {
+      sendImage();
+    } else if (message) {
+      sendMessage();
+    } else {
+      onPlusClicked();
+    }
+  };
+
   const sendMessage = async () => {
     const user = await Auth.currentAuthenticatedUser();
 
@@ -98,6 +110,38 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
 
     updateLastMessage(newMessage);
     setMessage('');
+  };
+
+  const onPlusClicked = async () => {
+    setShowAttachMenu(currentValue => !currentValue);
+  };
+
+  const sendImage = async () => {
+    const blob = await getImageBlob();
+    const {key} = await Storage.put(`${uuid.v4()}.png`, blob);
+
+    const user = await Auth.currentAuthenticatedUser();
+
+    const newMessage = await DataStore.save(
+      new Message({
+        content: message,
+        userID: user.attributes.sub,
+        chatroomID: chatRoom.id,
+        image: key,
+      }),
+    );
+
+    updateLastMessage(newMessage);
+    setMessage('');
+    setImageMessage(null);
+  };
+
+  const getImageBlob = async () => {
+    if (!imageMessage) return null;
+
+    const response = await fetch(imageMessage);
+    const blob = await response.blob();
+    return blob;
   };
 
   const updateLastMessage = async (newMessage: Message) => {
@@ -143,25 +187,17 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
             />
           </View>
         </View>
-        <View style={styles.buttonContainer}>
+        <Pressable style={styles.buttonContainer} onPress={onSendPressed}>
           {message || imageMessage ? (
             <MaterialIcons
               name={'keyboard-arrow-up'}
               size={30}
               color={Colors.green}
-              onPress={sendMessage}
             />
           ) : (
-            <Entypo
-              name={'plus'}
-              size={25}
-              color={Colors.green}
-              onPress={() => {
-                setShowAttachMenu(currentValue => !currentValue);
-              }}
-            />
+            <Entypo name={'plus'} size={25} color={Colors.green} />
           )}
-        </View>
+        </Pressable>
       </View>
       {showAttachMenu && <AttachmentsMenu buttons={AttachMenuButtons} />}
     </KeyboardAvoidingView>

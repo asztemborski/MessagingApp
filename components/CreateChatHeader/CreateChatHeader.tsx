@@ -7,8 +7,6 @@ import Feather from 'react-native-vector-icons/Feather';
 import {TextInput} from 'react-native-gesture-handler';
 
 const CreateChatHeader: React.FunctionComponent = () => {
-  const navigation = useNavigation();
-
   return (
     <View style={styles.root}>
       <View style={styles.topContainer}>

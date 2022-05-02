@@ -1,12 +1,22 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import SettingsScreenHeader from '../components/SettingsScreenHeader/SettingsScreenHeader';
+import Colors from '../constants/Colors';
 
 const SettingsScreen: React.FunctionComponent = () => {
   return (
-    <View>
-      <Text style={{fontSize: 28}}>setting screen</Text>
+    <View style={styles.root}>
+      <SettingsScreenHeader />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  root: {
+    backgroundColor: Colors.background,
+    width: '100%',
+    height: '100%',
+  },
+});
 
 export default SettingsScreen;

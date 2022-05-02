@@ -5,6 +5,8 @@ import Colors from '../../constants/Colors';
 import {Message as MessageModel, User} from '../../src/models';
 import {Auth, DataStore} from 'aws-amplify';
 import {S3Image} from 'aws-amplify-react-native';
+import {Storage} from 'aws-amplify';
+import Video from 'react-native-video';
 
 interface Props {
   message: MessageModel;
@@ -30,6 +32,33 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
 
   if (!user) return null;
 
+  const messageContent = () => {
+    if (message.image) {
+      return (
+        <S3Image
+          imgKey={message.image}
+          style={{
+            width: '100%',
+            aspectRatio: 4 / 3,
+            borderRadius: 5,
+          }}
+          resizeMode={'contain'}
+        />
+      );
+    } else if (message.video) {
+      return (
+        <Video
+          source={{
+            uri: 'http://videocdn.bodybuilding.com/video/mp4/62000/62792m.mp4',
+          }}
+          style={{width: '100%', borderRadius: 5, aspectRatio: 4 / 3}}
+        />
+      );
+    } else {
+      return <Text style={styles.text}>{message.content}</Text>;
+    }
+  };
+
   return (
     <View style={[styles.container]}>
       {!isMe && !message.prevMsgSameOwner ? (
@@ -51,22 +80,11 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
             marginBottom: 2,
             marginLeft: isMe ? 'auto' : 10,
           },
+          !!message.image && {
+            padding: 0,
+          },
         ]}>
-        {message.image ? (
-          <S3Image
-            imgKey={message.image}
-            style={{
-              width: '100%',
-              aspectRatio: 4 / 3,
-              marginBottom: message.content != '' ? 10 : 0,
-              borderRadius: 5,
-            }}
-            resizeMode={'contain'}
-          />
-        ) : null}
-        {!!message.content && (
-          <Text style={styles.text}>{message.content}</Text>
-        )}
+        {messageContent()}
       </View>
     </View>
   );

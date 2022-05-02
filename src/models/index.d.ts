@@ -27,6 +27,7 @@ export declare class Message {
   readonly chatroomID: string;
   readonly image?: string | null;
   readonly audio?: string | null;
+  readonly video?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   readonly prevMsgSameOwner?: boolean;

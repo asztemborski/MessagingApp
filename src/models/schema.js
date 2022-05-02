@@ -45,6 +45,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "video": {
+                    "name": "video",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -379,5 +386,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "ef0883ce810a569708775e8c94595bc8"
+    "version": "6699a16b577de9bdd3f704d31a0016f3"
 };

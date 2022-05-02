@@ -19,7 +19,7 @@ import AttachmentsMenu from '../AttachmentsMenu/AttachmentsMenu';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ImagePicker, {ImageOrVideo} from 'react-native-image-crop-picker';
 import uuid from 'react-native-uuid';
-import {Audio, AVPlaybackStatus} from 'expo-av';
+import {Audio} from 'expo-av';
 import VoiceMessagePlayer from '../VoiceMessagePlayer/VoiceMessagePlayer';
 
 interface Props {
@@ -268,6 +268,7 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
       icon: <FontAwesome name="microphone" size={20} color={'white'} />,
       onPressIn: async () => {
         try {
+          await Audio.requestPermissionsAsync();
           await Audio.setAudioModeAsync({
             allowsRecordingIOS: true,
             playsInSilentModeIOS: true,
@@ -276,6 +277,7 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
             Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY,
           );
 
+          console.log('essaaas');
           setRecording(recording);
         } catch (e) {}
       },
@@ -323,7 +325,7 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
         <View
           style={[
             styles.inputContainer,
-            !!soundUri && {flexDirection: 'column'},
+            soundUri ? {flexDirection: 'column'} : null,
           ]}>
           {soundUri && <VoiceMessagePlayer soundUri={soundUri} />}
           <View style={{flexDirection: 'row'}}>

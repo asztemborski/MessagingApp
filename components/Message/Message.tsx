@@ -73,8 +73,8 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
           }}
           ref={video}
           style={{width: '100%', borderRadius: 5, aspectRatio: 4 / 3}}
-          useNativeControls
           isLooping
+          resizeMode="contain"
         />
       );
     } else {

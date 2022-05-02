@@ -8,6 +8,8 @@ type Button = {
   icon: ReactNode;
   name: string;
   onPress?: () => void;
+  onPressIn?: () => void;
+  onPressOut?: () => void;
   bgColor: string;
 };
 

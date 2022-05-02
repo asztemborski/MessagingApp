@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Image, Text, View} from 'react-native';
 import styles from './styles';
 import Colors from '../../constants/Colors';
@@ -6,7 +6,8 @@ import {Message as MessageModel, User} from '../../src/models';
 import {Auth, DataStore} from 'aws-amplify';
 import {S3Image} from 'aws-amplify-react-native';
 import {Storage} from 'aws-amplify';
-import Video from 'react-native-video';
+import {Video} from 'expo-av';
+import VoiceMessagePlayer from '../VoiceMessagePlayer/VoiceMessagePlayer';
 
 interface Props {
   message: MessageModel;
@@ -15,10 +16,24 @@ interface Props {
 const Message: React.FunctionComponent<Props> = ({message}) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [isMe, setIsMe] = useState<boolean | undefined | null>(null);
+  const [soundUri, setSoundUri] = useState<any>(null);
+  const [videoUri, setVideoUri] = useState<any>(null);
+
+  const video = useRef(null);
 
   useEffect(() => {
     DataStore.query(User, message.userID).then(setUser);
   }, []);
+
+  useEffect(() => {
+    if (message.audio) {
+      Storage.get(message.audio).then(setSoundUri);
+    }
+
+    if (message.video) {
+      Storage.get(message.video).then(setVideoUri);
+    }
+  }, [message]);
 
   useEffect(() => {
     const checkIfMe = async () => {
@@ -45,13 +60,21 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
           resizeMode={'contain'}
         />
       );
+    } else if (soundUri) {
+      <VoiceMessagePlayer
+        soundUri={soundUri}
+        styleRoot={{backgroundColor: 'red'}}
+      />;
     } else if (message.video) {
       return (
         <Video
           source={{
-            uri: 'http://videocdn.bodybuilding.com/video/mp4/62000/62792m.mp4',
+            uri: videoUri,
           }}
+          ref={video}
           style={{width: '100%', borderRadius: 5, aspectRatio: 4 / 3}}
+          useNativeControls
+          isLooping
         />
       );
     } else {
@@ -71,21 +94,37 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
       ) : (
         <View style={styles.image} />
       )}
-      <View
-        style={[
-          styles.textContainer,
-          {
+      {soundUri ? (
+        <VoiceMessagePlayer
+          soundUri={soundUri}
+          styleRoot={{
             backgroundColor: isMe ? Colors.green : Colors.darkGray,
-            marginVertical: message.prevMsgSameOwner ? 2 : 10,
-            marginBottom: 2,
+            width: '60%',
             marginLeft: isMe ? 'auto' : 10,
-          },
-          !!message.image && {
-            padding: 0,
-          },
-        ]}>
-        {messageContent()}
-      </View>
+            marginVertical: message.prevMsgSameOwner ? 2 : 10,
+          }}
+          iconsColor={isMe ? Colors.background : Colors.green}
+          styleAudioProgressFG={{
+            backgroundColor: isMe ? Colors.background : Colors.green,
+          }}
+        />
+      ) : (
+        <View
+          style={[
+            styles.textContainer,
+            {
+              backgroundColor: isMe ? Colors.green : Colors.darkGray,
+              marginVertical: message.prevMsgSameOwner ? 2 : 10,
+              marginBottom: 2,
+              marginLeft: isMe ? 'auto' : 10,
+            },
+            !!message.image && {
+              padding: 0,
+            },
+          ]}>
+          {messageContent()}
+        </View>
+      )}
     </View>
   );
 };

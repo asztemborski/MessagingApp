@@ -7,12 +7,18 @@ interface Props {
     name: string;
     icon: ReactNode;
     onPress?: () => void;
+    onPressIn?: () => void;
+    onPressOut?: () => void;
   };
 }
 
 const AttachmentButton: React.FunctionComponent<Props> = ({data}) => {
   return (
-    <Pressable onPress={data.onPress} style={styles.root}>
+    <Pressable
+      onPress={data.onPress}
+      onPressIn={data.onPressIn}
+      onPressOut={data.onPressOut}
+      style={styles.root}>
       <View style={[styles.icon, {backgroundColor: data.bgColor}]}>
         {data.icon}
       </View>

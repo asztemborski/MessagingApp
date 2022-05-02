@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10,
     borderRadius: 20,
-    width: '90%',
+    flex: 1,
     flexDirection: 'row',
   },
   imageMessage: {
@@ -32,12 +32,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 22,
     backgroundColor: Colors.green,
-    right: 12.7,
+    right: 2.5,
     alignSelf: 'flex-end',
     bottom: 13.25,
   },
   buttonContainer: {
-    marginLeft: -20,
     bottom: 5,
     margin: 10,
     width: 40,

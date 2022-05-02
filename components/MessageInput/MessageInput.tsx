@@ -19,78 +19,27 @@ import AttachmentsMenu from '../AttachmentsMenu/AttachmentsMenu';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ImagePicker, {ImageOrVideo} from 'react-native-image-crop-picker';
 import uuid from 'react-native-uuid';
+import {Audio, AVPlaybackStatus} from 'expo-av';
+import VoiceMessagePlayer from '../VoiceMessagePlayer/VoiceMessagePlayer';
 
 interface Props {
   chatRoom: ChatRoom;
 }
 
 const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
-  const AttachMenuButtons = [
-    {
-      name: 'Gallery',
-      bgColor: '#399DF8',
-      icon: <MaterialIcons name="photo" size={20} color={'white'} />,
-      onPress: () => {
-        ImagePicker.openPicker({
-          width: 300,
-          height: 400,
-          cropping: false,
-        }).then(image => {
-          setImageMessage(image);
-          setShowAttachMenu(false);
-        });
-      },
-    },
-    {
-      name: 'Camera',
-      bgColor: '#F81B68',
-      icon: <MaterialIcons name="camera-alt" size={20} color={'white'} />,
-      onPress: () => {
-        ImagePicker.openCamera({
-          width: 300,
-          height: 400,
-          cropping: false,
-        }).then(image => {
-          setImageMessage(image);
-          setShowAttachMenu(false);
-        });
-      },
-    },
-    {
-      name: 'Audio',
-      bgColor: '#2EC8AD',
-      icon: <FontAwesome name="microphone" size={20} color={'white'} />,
-    },
-    {
-      name: 'GIF',
-      bgColor: '#F67836',
-      icon: <MaterialIcons name="gif" size={40} color={'white'} />,
-    },
-    {
-      name: 'Files',
-      bgColor: '#F8B50A',
-      icon: <Entypo name="attachment" size={20} color={'white'} />,
-    },
-    {
-      name: 'Location',
-      bgColor: '#893AF8',
-      icon: <MaterialIcons name="location-pin" size={25} color={'white'} />,
-    },
-    {
-      name: 'Plan',
-      bgColor: Colors.lightGreen,
-      icon: <MaterialIcons name="event" size={20} color={'white'} />,
-    },
-  ];
-
   const [message, setMessage] = useState('');
   const [showAttachMenu, setShowAttachMenu] = useState(false);
   const [imageMessage, setImageMessage] = useState<ImageOrVideo | null>(null);
   const [progress, setProgress] = useState(0);
+  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+
+  const [soundUri, setSoundUri] = useState<string | null>(null);
 
   const onSendPressed = () => {
     if (imageMessage) {
       sendImageOrVideo(imageMessage);
+    } else if (soundUri) {
+      sendAudio();
     } else if (message) {
       sendMessage();
     } else {
@@ -135,7 +84,9 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
   };
 
   const sendImage = async () => {
-    const blob = await getImageOrVideoBlob();
+    if (!imageMessage) return;
+
+    const blob = await getBlob(imageMessage.path);
     const {key} = await Storage.put(`${uuid.v4()}.png`, blob, {
       progressCallback,
     });
@@ -169,7 +120,9 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
   };
 
   const sendVideo = async () => {
-    const blob = await getImageOrVideoBlob();
+    if (!imageMessage) return;
+
+    const blob = await getBlob(imageMessage.path);
     const {key} = await Storage.put(`${uuid.v4()}.mp4`, blob, {
       progressCallback,
     });
@@ -202,6 +155,44 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
     resetFields();
   };
 
+  const sendAudio = async () => {
+    if (!soundUri) return;
+
+    const uriParts = soundUri.split('.');
+    const type = uriParts[uriParts.length - 1];
+    const blob = await getBlob(soundUri);
+    const {key} = await Storage.put(`${uuid.v4()}.${type}`, blob, {
+      progressCallback,
+    });
+
+    const user = await Auth.currentAuthenticatedUser();
+
+    const newAudioMessage = await DataStore.save(
+      new Message({
+        content: `User sent audio message`,
+        userID: user.attributes.sub,
+        chatroomID: chatRoom.id,
+        audio: key,
+      }),
+    );
+
+    if (message) {
+      const newMessage = await DataStore.save(
+        new Message({
+          content: message,
+          userID: user.attributes.sub,
+          chatroomID: chatRoom.id,
+        }),
+      );
+
+      updateLastMessage(newMessage);
+    } else {
+      updateLastMessage(newAudioMessage);
+    }
+
+    resetFields();
+  };
+
   const sendImageOrVideo = (image: ImageOrVideo | null) => {
     if (!image) return;
 
@@ -215,12 +206,11 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
     setImageMessage(null);
     setProgress(0);
     setShowAttachMenu(false);
+    setSoundUri(null);
   };
 
-  const getImageOrVideoBlob = async () => {
-    if (!imageMessage) return null;
-
-    const response = await fetch(imageMessage.path);
+  const getBlob = async (uri: string) => {
+    const response = await fetch(uri);
     const blob = await response.blob();
     return blob;
   };
@@ -228,7 +218,7 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
   const SendButton = () => {
     if (progress > 0) {
       return <ActivityIndicator color={Colors.green} />;
-    } else if (message || imageMessage) {
+    } else if (message || imageMessage || soundUri) {
       return (
         <MaterialIcons
           name={'keyboard-arrow-up'}
@@ -241,14 +231,103 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
     }
   };
 
+  const AttachMenuButtons = [
+    {
+      name: 'Gallery',
+      bgColor: '#399DF8',
+      icon: <MaterialIcons name="photo" size={20} color={'white'} />,
+      onPress: () => {
+        ImagePicker.openPicker({
+          width: 300,
+          height: 400,
+          cropping: false,
+        }).then(image => {
+          setImageMessage(image);
+          setShowAttachMenu(false);
+        });
+      },
+    },
+    {
+      name: 'Camera',
+      bgColor: '#F81B68',
+      icon: <MaterialIcons name="camera-alt" size={20} color={'white'} />,
+      onPress: () => {
+        ImagePicker.openCamera({
+          width: 300,
+          height: 400,
+          cropping: false,
+        }).then(image => {
+          setImageMessage(image);
+          setShowAttachMenu(false);
+        });
+      },
+    },
+    {
+      name: 'Audio',
+      bgColor: '#2EC8AD',
+      icon: <FontAwesome name="microphone" size={20} color={'white'} />,
+      onPressIn: async () => {
+        try {
+          await Audio.setAudioModeAsync({
+            allowsRecordingIOS: true,
+            playsInSilentModeIOS: true,
+          });
+          const {recording} = await Audio.Recording.createAsync(
+            Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY,
+          );
+
+          setRecording(recording);
+        } catch (e) {}
+      },
+      onPressOut: async () => {
+        if (!recording) return;
+
+        setRecording(null);
+        await recording.stopAndUnloadAsync();
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: false,
+        });
+        const uri = recording.getURI();
+        setSoundUri(uri);
+
+        if (!uri) return;
+      },
+    },
+    {
+      name: 'GIF',
+      bgColor: '#F67836',
+      icon: <MaterialIcons name="gif" size={40} color={'white'} />,
+    },
+    {
+      name: 'Files',
+      bgColor: '#F8B50A',
+      icon: <Entypo name="attachment" size={20} color={'white'} />,
+    },
+    {
+      name: 'Location',
+      bgColor: '#893AF8',
+      icon: <MaterialIcons name="location-pin" size={25} color={'white'} />,
+    },
+    {
+      name: 'Plan',
+      bgColor: Colors.lightGreen,
+      icon: <MaterialIcons name="event" size={20} color={'white'} />,
+    },
+  ];
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={{flexDirection: 'row'}}>
-        <View style={{flexDirection: 'row'}}>
-          <View style={styles.inputContainer}>
-            {imageMessage ? (
+        <View
+          style={[
+            styles.inputContainer,
+            !!soundUri && {flexDirection: 'column'},
+          ]}>
+          {soundUri && <VoiceMessagePlayer soundUri={soundUri} />}
+          <View style={{flexDirection: 'row'}}>
+            {imageMessage && (
               <Pressable
                 onLongPress={() => {
                   setImageMessage(null);
@@ -258,9 +337,9 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
                   style={styles.imageMessage}
                 />
               </Pressable>
-            ) : null}
+            )}
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput, !!soundUri && {}]}
               placeholder={'Type your message'}
               placeholderTextColor={'grey'}
               value={message}

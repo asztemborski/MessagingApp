@@ -1,5 +1,5 @@
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import BackButton from '../components/BackButton/BackButton';
@@ -11,6 +11,7 @@ import CreateChatScreen from '../screens/CreateChatScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ProfileScreen from '../screens/ProfileScreen';
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function Navigation() {
@@ -35,6 +36,7 @@ function RootNavigator() {
     <Stack.Navigator
       screenOptions={{
         headerStyle: {backgroundColor: Colors.green},
+        ...TransitionPresets.SlideFromRightIOS,
       }}>
       <Stack.Screen
         name={'Root'}

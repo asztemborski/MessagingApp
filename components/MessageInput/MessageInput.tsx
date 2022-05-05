@@ -74,12 +74,7 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
     setShowAttachMenu(currentValue => !currentValue);
   };
 
-  type Progress = {
-    loaded: number;
-    total: number;
-  };
-
-  const progressCallback = (progress: Progress) => {
+  const progressCallback = (progress: {loaded: number; total: number}) => {
     setProgress((progress.loaded / progress.total) * 100);
   };
 
@@ -251,7 +246,7 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
       name: 'Camera',
       bgColor: '#F81B68',
       icon: <MaterialIcons name="camera-alt" size={20} color={'white'} />,
-      onPress: () => {
+      onPress: async () => {
         ImagePicker.openCamera({
           width: 300,
           height: 400,
@@ -277,7 +272,6 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
             Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY,
           );
 
-          console.log('essaaas');
           setRecording(recording);
         } catch (e) {}
       },

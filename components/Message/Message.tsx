@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Image, Text, View} from 'react-native';
+import {Image, Text, useWindowDimensions, View} from 'react-native';
 import styles from './styles';
 import Colors from '../../constants/Colors';
 import {Message as MessageModel, User} from '../../src/models';
@@ -8,6 +8,7 @@ import {S3Image} from 'aws-amplify-react-native';
 import {Storage} from 'aws-amplify';
 import {Video} from 'expo-av';
 import VoiceMessagePlayer from '../VoiceMessagePlayer/VoiceMessagePlayer';
+import VideoPlayer from 'expo-video-player';
 
 interface Props {
   message: MessageModel;
@@ -18,6 +19,9 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
   const [isMe, setIsMe] = useState<boolean | undefined | null>(null);
   const [soundUri, setSoundUri] = useState<any>(null);
   const [videoUri, setVideoUri] = useState<any>(null);
+
+  const {width} = useWindowDimensions();
+  const videoPlayerWidth = width * 0.6;
 
   const video = useRef(null);
 
@@ -66,17 +70,7 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
         styleRoot={{backgroundColor: 'red'}}
       />;
     } else if (message.video) {
-      return (
-        <Video
-          source={{
-            uri: videoUri,
-          }}
-          ref={video}
-          style={{width: '100%', borderRadius: 5, aspectRatio: 4 / 3}}
-          isLooping
-          resizeMode="contain"
-        />
-      );
+      return;
     } else {
       return <Text style={styles.text}>{message.content}</Text>;
     }
@@ -94,7 +88,26 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
       ) : (
         <View style={styles.image} />
       )}
-      {soundUri ? (
+      {videoUri ? (
+        <View
+          style={{
+            marginLeft: isMe ? 'auto' : 10,
+            marginVertical: message.prevMsgSameOwner ? 2 : 10,
+            margin: 10,
+            borderRadius: 10,
+          }}>
+          <VideoPlayer
+            style={{height: 200, width: videoPlayerWidth}}
+            videoProps={{
+              shouldPlay: false,
+              resizeMode: Video.RESIZE_MODE_COVER,
+              source: {uri: videoUri},
+              style: {width: '100%', height: '100%'},
+              usePoster: true,
+            }}
+          />
+        </View>
+      ) : soundUri ? (
         <VoiceMessagePlayer
           soundUri={soundUri}
           styleRoot={{

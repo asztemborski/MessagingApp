@@ -1,4 +1,4 @@
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
@@ -11,6 +11,7 @@ import CreateChatScreen from '../screens/CreateChatScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ProfileScreen from '../screens/ProfileScreen';
+import ImageViewerScreen from '../screens/ImageViewerScreen';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -27,11 +28,14 @@ export type RootStackParamList = {
   ChatListScreen: undefined;
   ChatRoomScreen: {id: string};
   CreateChatScreen: undefined;
+  ImageViewerScreen: {image: string};
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const navigation = useNavigation();
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -49,7 +53,12 @@ function RootNavigator() {
         component={ChatRoomScreen}
         options={({route}) => ({
           headerTitle: () => <ChatRoomScreenHeader id={route.params?.id} />,
-          headerLeft: () => <BackButton style={{paddingHorizontal: 10}} />,
+          headerLeft: () => (
+            <BackButton
+              style={{paddingHorizontal: 10}}
+              OnPress={() => navigation.navigate('Chats' as never, {} as never)}
+            />
+          ),
           headerTitleContainerStyle: {marginLeft: -10},
         })}
       />
@@ -59,6 +68,11 @@ function RootNavigator() {
         options={{
           headerShown: false,
         }}
+      />
+      <Stack.Screen
+        name={'ImageViewerScreen'}
+        component={ImageViewerScreen}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

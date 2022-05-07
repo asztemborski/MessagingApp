@@ -13,7 +13,7 @@ import {RootStackParamList} from '../navigation';
 const ChatRoomScreen: React.FunctionComponent = () => {
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [chatRoom, setChatRoom] = useState<ChatRoom | null>(null);
-  const route: RouteProp<RootStackParamList> = useRoute();
+  const route: RouteProp<RootStackParamList, 'ChatRoomScreen'> = useRoute();
 
   useEffect(() => {
     fetchChatRoom();

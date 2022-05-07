@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 10,
     maxWidth: '60%',
+    marginBottom: 2,
   },
   text: {
     color: 'white',

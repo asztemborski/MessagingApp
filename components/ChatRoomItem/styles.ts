@@ -1,4 +1,5 @@
 import {Dimensions, StyleSheet} from 'react-native';
+import Colors from '../../constants/Colors';
 
 const width = Dimensions.get('window').width;
 
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     height: 15,
     backgroundColor: '#2cb9b0',
     borderRadius: 7,
-    borderColor: 'black',
+    borderColor: Colors.background,
     borderWidth: 3,
   },
   rightContainer: {

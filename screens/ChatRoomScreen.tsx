@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import Message from '../components/Message/Message';
 import {FlatList} from 'react-native-gesture-handler';
 import MessageInput from '../components/MessageInput/MessageInput';
@@ -88,14 +88,14 @@ const ChatRoomScreen: React.FunctionComponent = () => {
   }
 
   return (
-    <SafeAreaProvider style={styles.page}>
+    <SafeAreaView style={styles.page}>
       <FlatList
         data={messages}
         renderItem={({item}) => <Message message={item} />}
         inverted
       />
       <MessageInput chatRoom={chatRoom} />
-    </SafeAreaProvider>
+    </SafeAreaView>
   );
 };
 

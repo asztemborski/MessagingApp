@@ -53,12 +53,7 @@ function RootNavigator() {
         component={ChatRoomScreen}
         options={({route}) => ({
           headerTitle: () => <ChatRoomScreenHeader id={route.params?.id} />,
-          headerLeft: () => (
-            <BackButton
-              style={{paddingHorizontal: 10}}
-              OnPress={() => navigation.navigate('Chats' as never, {} as never)}
-            />
-          ),
+          headerLeft: () => <BackButton style={{paddingHorizontal: 10}} />,
           headerTitleContainerStyle: {marginLeft: -10},
         })}
       />

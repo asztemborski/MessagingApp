@@ -1,13 +1,14 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import SettingsScreenHeader from '../components/SettingsScreenHeader/SettingsScreenHeader';
 import Colors from '../constants/Colors';
 
 const SettingsScreen: React.FunctionComponent = () => {
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
       <SettingsScreenHeader />
-    </View>
+    </SafeAreaView>
   );
 };
 

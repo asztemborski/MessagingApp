@@ -5,15 +5,16 @@ import Feather from 'react-native-vector-icons/Feather';
 
 interface Props {
   style?: {};
+  OnPress?: () => void;
 }
 
-const BackButton: React.FunctionComponent<Props> = ({style}) => {
+const BackButton: React.FunctionComponent<Props> = ({style, OnPress}) => {
   const navigation = useNavigation();
 
   return (
     <Pressable
       style={[styles.container, style]}
-      onPress={() => navigation.goBack()}>
+      onPress={() => (OnPress ? OnPress : navigation.goBack())}>
       <Feather name={'arrow-left'} size={24} color={'white'} />
     </Pressable>
   );

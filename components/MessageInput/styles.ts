@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.green,
     right: 2.5,
     alignSelf: 'flex-end',
-    bottom: Platform.OS === 'ios' ? 5 : 13.25,
+    bottom: Platform.OS === 'ios' ? 3.5 : 13.25,
   },
   buttonContainer: {
     bottom: 5,
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end',
-    top: Platform.OS === 'ios' ? 0 : null,
+    top: Platform.OS === 'ios' ? 0 : undefined,
   },
 });
 

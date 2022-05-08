@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -21,6 +21,7 @@ import ImagePicker, {ImageOrVideo} from 'react-native-image-crop-picker';
 import uuid from 'react-native-uuid';
 import {Audio} from 'expo-av';
 import VoiceMessagePlayer from '../VoiceMessagePlayer/VoiceMessagePlayer';
+import {useEvent} from 'react-native-reanimated';
 
 interface Props {
   chatRoom: ChatRoom;
@@ -226,6 +227,13 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
     }
   };
 
+  useEffect(() => {
+    const requestPermission = async () => {
+      await Audio.requestPermissionsAsync();
+    };
+    requestPermission();
+  }, []);
+
   const AttachMenuButtons = [
     {
       name: 'Gallery',
@@ -263,7 +271,6 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
       icon: <FontAwesome name="microphone" size={20} color={'white'} />,
       onPressIn: async () => {
         try {
-          await Audio.requestPermissionsAsync();
           await Audio.setAudioModeAsync({
             allowsRecordingIOS: true,
             playsInSilentModeIOS: true,
@@ -281,7 +288,7 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
         setRecording(null);
         await recording.stopAndUnloadAsync();
         await Audio.setAudioModeAsync({
-          allowsRecordingIOS: false,
+          allowsRecordingIOS: true,
         });
         const uri = recording.getURI();
         setSoundUri(uri);
@@ -349,7 +356,7 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
               color={Colors.darkGray}
               style={{
                 alignSelf: 'flex-end',
-                bottom: Platform.OS === 'ios' ? 2.5 : 10,
+                bottom: Platform.OS === 'ios' ? 1.7 : 10,
               }}
             />
           </View>

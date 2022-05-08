@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Image, Pressable, Text, useWindowDimensions, View} from 'react-native';
+import {
+  Image,
+  Platform,
+  Pressable,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import styles from './styles';
 import Colors from '../../constants/Colors';
 import {Message as MessageModel, User} from '../../src/models';
@@ -67,7 +74,7 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
               aspectRatio: 4 / 5,
               borderRadius: 5,
             }}
-            resizeMode={'cover'}
+            resizeMode={Platform.OS === 'ios' ? 'cover' : 'contain'}
           />
         </Pressable>
       );

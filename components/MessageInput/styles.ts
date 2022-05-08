@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end',
-    top: 0,
+    top: Platform.OS === 'ios' ? 0 : null,
   },
 });
 

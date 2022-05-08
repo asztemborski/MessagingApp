@@ -9,6 +9,7 @@ import {DataStore, SortDirection} from 'aws-amplify';
 import {Message as MessageModel, ChatRoom} from '../src/models';
 import Colors from '../constants/Colors';
 import {RootStackParamList} from '../navigation';
+import ChatRoomScreenHeader from '../components/ChatRoomScreenHeader/ChatRoomScreenHeader';
 
 const ChatRoomScreen: React.FunctionComponent = () => {
   const [messages, setMessages] = useState<MessageModel[]>([]);
@@ -89,6 +90,7 @@ const ChatRoomScreen: React.FunctionComponent = () => {
 
   return (
     <SafeAreaView style={styles.page}>
+      <ChatRoomScreenHeader id={route.params?.id} />
       <FlatList
         data={messages}
         renderItem={({item}) => <Message message={item} />}

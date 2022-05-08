@@ -1,10 +1,13 @@
 import React, {ReactNode, useEffect, useState} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, StatusBar} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {DataStore, Auth} from 'aws-amplify';
 import {User, ChatRoomUser} from '../../src/models';
+import Colors from '../../constants/Colors';
+import BackButton from '../BackButton/BackButton';
+import CustomStatusBar from '../CustomStatusBar/CustomStatusBar';
 
 interface Props {
   id: string;
@@ -29,9 +32,12 @@ const ChatRoomScreenHeader: React.FunctionComponent<Props> = ({id}) => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.name}>{user?.name}</Text>
-        <Text style={styles.status}>Active now</Text>
+      <View style={{flexDirection: 'row'}}>
+        <BackButton />
+        <View>
+          <Text style={styles.name}>{user?.name}</Text>
+          <Text style={styles.status}>Active now</Text>
+        </View>
       </View>
       <View style={styles.iconsContainer}>
         <Ionicons
@@ -61,12 +67,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignSelf: 'center',
+    backgroundColor: Colors.green,
+    width: '100%',
+    height: 60,
     alignItems: 'center',
-    width: '115%',
-    height: '100%',
-    marginTop: 5,
-    marginLeft: 45,
+
+    padding: 10,
   },
   name: {
     color: 'white',

@@ -67,7 +67,7 @@ const Message: React.FunctionComponent<Props> = ({message}) => {
               aspectRatio: 4 / 5,
               borderRadius: 5,
             }}
-            resizeMode={'contain'}
+            resizeMode={'cover'}
           />
         </Pressable>
       );

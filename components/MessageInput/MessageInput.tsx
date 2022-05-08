@@ -347,7 +347,10 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
               name={'smile'}
               size={28}
               color={Colors.darkGray}
-              style={{alignSelf: 'flex-end', bottom: 10}}
+              style={{
+                alignSelf: 'flex-end',
+                bottom: Platform.OS === 'ios' ? 2.5 : 10,
+              }}
             />
           </View>
         </View>

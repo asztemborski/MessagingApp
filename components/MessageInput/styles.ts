@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import Colors from '../../constants/Colors';
 
 const styles = StyleSheet.create({
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     color: 'white',
     flex: 1,
     alignSelf: 'flex-end',
+    marginBottom: Platform.OS === 'ios' ? 5 : 0,
   },
   emojiIconBackground: {
     position: 'absolute',
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.green,
     right: 2.5,
     alignSelf: 'flex-end',
-    bottom: 13.25,
+    bottom: Platform.OS === 'ios' ? 5 : 13.25,
   },
   buttonContainer: {
     bottom: 5,
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end',
+    top: 0,
   },
 });
 

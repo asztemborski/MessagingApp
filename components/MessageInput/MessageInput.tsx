@@ -21,7 +21,6 @@ import ImagePicker, {ImageOrVideo} from 'react-native-image-crop-picker';
 import uuid from 'react-native-uuid';
 import {Audio} from 'expo-av';
 import VoiceMessagePlayer from '../VoiceMessagePlayer/VoiceMessagePlayer';
-import {useEvent} from 'react-native-reanimated';
 
 interface Props {
   chatRoom: ChatRoom;
@@ -37,15 +36,70 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
   const [soundUri, setSoundUri] = useState<string | null>(null);
 
   const onSendPressed = () => {
-    if (imageMessage) {
-      sendImageOrVideo(imageMessage);
-    } else if (soundUri) {
-      sendAudio();
-    } else if (message) {
-      sendMessage();
+    if (imageMessage || message || soundUri) {
+      sendMessage2();
     } else {
       onPlusClicked();
     }
+
+    // if (imageMessage) {
+    //   sendImageOrVideo(imageMessage);
+    // } else if (soundUri) {
+    //   sendAudio();
+    // } else if (message) {
+    //   sendMessage();
+    // } else {
+    //   onPlusClicked();
+    // }
+  };
+
+  const sendMessage2 = async () => {
+    const user = await Auth.currentAuthenticatedUser();
+    let mediaUri = null;
+    let essa = null;
+
+    if (imageMessage) {
+      mediaUri = imageMessage.path;
+    } else if (soundUri) {
+      mediaUri = soundUri;
+    }
+
+    if (mediaUri) {
+      const uriParts = mediaUri.split('.');
+      const type = uriParts[uriParts.length - 1];
+      console.log(type);
+
+      const blob = await getBlob(mediaUri);
+      const {key} = await Storage.put(`${uuid.v4()}.${type}`, blob, {
+        progressCallback,
+      });
+
+      console.log(essa);
+
+      const newMediaMessage = await DataStore.save(
+        new Message({
+          userID: user.attributes.sub,
+          chatroomID: chatRoom.id,
+          image: imageMessage?.mime === 'image/jpeg' ? key : null,
+          video: imageMessage?.mime === 'video/mp4' ? key : null,
+          audio: soundUri ? key : null,
+        }),
+      );
+      updateLastMessage(newMediaMessage);
+    }
+
+    if (message) {
+      const newMessage = await DataStore.save(
+        new Message({
+          content: message,
+          userID: user.attributes.sub,
+          chatroomID: chatRoom.id,
+        }),
+      );
+      updateLastMessage(newMessage);
+    }
+
+    resetFields();
   };
 
   const sendMessage = async () => {

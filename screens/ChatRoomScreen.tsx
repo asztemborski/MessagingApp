@@ -3,7 +3,6 @@ import {SafeAreaView, StyleSheet, View} from 'react-native';
 import Message from '../components/Message/Message';
 import {FlatList} from 'react-native-gesture-handler';
 import MessageInput from '../components/MessageInput/MessageInput';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {useRoute, RouteProp} from '@react-navigation/native';
 import {DataStore, SortDirection} from 'aws-amplify';
 import {Message as MessageModel, ChatRoom} from '../src/models';

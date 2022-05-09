@@ -37,26 +37,15 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
 
   const onSendPressed = () => {
     if (imageMessage || message || soundUri) {
-      sendMessage2();
+      sendMessage();
     } else {
       onPlusClicked();
     }
-
-    // if (imageMessage) {
-    //   sendImageOrVideo(imageMessage);
-    // } else if (soundUri) {
-    //   sendAudio();
-    // } else if (message) {
-    //   sendMessage();
-    // } else {
-    //   onPlusClicked();
-    // }
   };
 
-  const sendMessage2 = async () => {
+  const sendMessage = async () => {
     const user = await Auth.currentAuthenticatedUser();
-    let mediaUri = null;
-    let essa = null;
+    let mediaUri;
 
     if (imageMessage) {
       mediaUri = imageMessage.path;
@@ -67,14 +56,11 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
     if (mediaUri) {
       const uriParts = mediaUri.split('.');
       const type = uriParts[uriParts.length - 1];
-      console.log(type);
 
       const blob = await getBlob(mediaUri);
       const {key} = await Storage.put(`${uuid.v4()}.${type}`, blob, {
         progressCallback,
       });
-
-      console.log(essa);
 
       const newMediaMessage = await DataStore.save(
         new Message({
@@ -102,21 +88,6 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
     resetFields();
   };
 
-  const sendMessage = async () => {
-    const user = await Auth.currentAuthenticatedUser();
-
-    const newMessage = await DataStore.save(
-      new Message({
-        content: message,
-        userID: user.attributes.sub,
-        chatroomID: chatRoom.id,
-      }),
-    );
-
-    updateLastMessage(newMessage);
-    resetFields();
-  };
-
   const updateLastMessage = async (newMessage: Message) => {
     await DataStore.save(
       ChatRoom.copyOf(chatRoom, updatedChatRoom => {
@@ -131,124 +102,6 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
 
   const progressCallback = (progress: {loaded: number; total: number}) => {
     setProgress((progress.loaded / progress.total) * 100);
-  };
-
-  const sendImage = async () => {
-    if (!imageMessage) return;
-
-    const blob = await getBlob(imageMessage.path);
-    const {key} = await Storage.put(`${uuid.v4()}.png`, blob, {
-      progressCallback,
-    });
-
-    const user = await Auth.currentAuthenticatedUser();
-
-    const newImageMessage = await DataStore.save(
-      new Message({
-        content: `User sent photo`,
-        userID: user.attributes.sub,
-        chatroomID: chatRoom.id,
-        image: key,
-      }),
-    );
-
-    if (message) {
-      const newMessage = await DataStore.save(
-        new Message({
-          content: message,
-          userID: user.attributes.sub,
-          chatroomID: chatRoom.id,
-        }),
-      );
-
-      updateLastMessage(newMessage);
-    } else {
-      updateLastMessage(newImageMessage);
-    }
-
-    resetFields();
-  };
-
-  const sendVideo = async () => {
-    if (!imageMessage) return;
-
-    const blob = await getBlob(imageMessage.path);
-    const {key} = await Storage.put(`${uuid.v4()}.mp4`, blob, {
-      progressCallback,
-    });
-
-    const user = await Auth.currentAuthenticatedUser();
-
-    const newVideoMessage = await DataStore.save(
-      new Message({
-        content: `User sent video`,
-        userID: user.attributes.sub,
-        chatroomID: chatRoom.id,
-        video: key,
-      }),
-    );
-
-    if (message) {
-      const newMessage = await DataStore.save(
-        new Message({
-          content: message,
-          userID: user.attributes.sub,
-          chatroomID: chatRoom.id,
-        }),
-      );
-
-      updateLastMessage(newMessage);
-    } else {
-      updateLastMessage(newVideoMessage);
-    }
-
-    resetFields();
-  };
-
-  const sendAudio = async () => {
-    if (!soundUri) return;
-
-    const uriParts = soundUri.split('.');
-    const type = uriParts[uriParts.length - 1];
-    const blob = await getBlob(soundUri);
-    const {key} = await Storage.put(`${uuid.v4()}.${type}`, blob, {
-      progressCallback,
-    });
-
-    const user = await Auth.currentAuthenticatedUser();
-
-    const newAudioMessage = await DataStore.save(
-      new Message({
-        content: `User sent audio message`,
-        userID: user.attributes.sub,
-        chatroomID: chatRoom.id,
-        audio: key,
-      }),
-    );
-
-    if (message) {
-      const newMessage = await DataStore.save(
-        new Message({
-          content: message,
-          userID: user.attributes.sub,
-          chatroomID: chatRoom.id,
-        }),
-      );
-
-      updateLastMessage(newMessage);
-    } else {
-      updateLastMessage(newAudioMessage);
-    }
-
-    resetFields();
-  };
-
-  const sendImageOrVideo = (image: ImageOrVideo | null) => {
-    if (!image) return;
-
-    if (image.mime === 'image/jpeg') sendImage();
-    if (image.mime === 'video/mp4') sendVideo();
-    else return;
   };
 
   const resetFields = () => {

@@ -62,12 +62,22 @@ const MessageInput: React.FunctionComponent<Props> = ({chatRoom}) => {
         progressCallback,
       });
 
+      let isVideo = false;
+
+      if (imageMessage?.mime === 'video/mp4') isVideo = true;
+      else isVideo = false;
+
       const newMediaMessage = await DataStore.save(
         new Message({
+          content: isVideo
+            ? 'User sent video'
+            : soundUri
+            ? 'User sent audio'
+            : 'User sent image',
           userID: user.attributes.sub,
           chatroomID: chatRoom.id,
-          image: imageMessage?.mime === 'image/jpeg' ? key : null,
-          video: imageMessage?.mime === 'video/mp4' ? key : null,
+          image: !isVideo ? key : null,
+          video: isVideo ? key : null,
           audio: soundUri ? key : null,
         }),
       );

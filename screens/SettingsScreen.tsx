@@ -1,47 +1,71 @@
-import {Auth, DataStore} from 'aws-amplify';
-import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import SettingsContainer, {
+  Option,
+} from '../components/SettingsContainer/SettingsContainer';
 import SettingsScreenHeader from '../components/SettingsScreenHeader/SettingsScreenHeader';
 import Colors from '../constants/Colors';
-import {User} from '../src/models';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const SettingsScreen: React.FunctionComponent = () => {
-  const [userInfo, setUserInfo] = useState<User | undefined>(undefined);
+  const AppSettingsButtons: Array<Option> = [
+    {
+      text: 'Dark Mode',
+      icon: <Ionicons name="moon" size={17} color={'white'} />,
+      iconColor: '#4F5958',
+      type: 'switch',
+    },
+    {
+      text: 'Profile',
+      icon: <MaterialCommunityIcons name="account" size={19} color={'white'} />,
+      iconColor: Colors.green,
+      type: 'navigate',
+    },
+    {
+      text: 'Chat Customize',
+      icon: <Ionicons name="md-chatbubbles" size={17} color={'white'} />,
+      iconColor: '#5871FD',
+      type: 'navigate',
+    },
+    {
+      text: 'Notification',
+      icon: (
+        <MaterialCommunityIcons name="bell-ring" size={17} color={'white'} />
+      ),
+      iconColor: '#F84680',
+      type: 'navigate',
+    },
+    {
+      text: 'Privacy',
+      icon: <MaterialCommunityIcons name="shield" size={17} color={'white'} />,
+      iconColor: '#BB58FD',
+      type: 'navigate',
+    },
+  ];
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const authUser = await Auth.currentAuthenticatedUser();
-
-      const user = await DataStore.query(User, authUser.attributes.sub);
-      setUserInfo(user);
-    };
-    fetchUserInfo();
-  }, []);
+  const AccountSettingsButtons: Array<Option> = [
+    {
+      text: 'Logout',
+      icon: <MaterialCommunityIcons name="lock" size={17} color={'white'} />,
+      iconColor: '#F4BF3F',
+    },
+    {
+      text: 'Delete Account',
+      icon: <MaterialCommunityIcons name="account" size={19} color={'white'} />,
+      iconColor: '#F96B6D',
+      type: 'navigate',
+    },
+  ];
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       <SettingsScreenHeader />
-      <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <View
-          style={{
-            padding: 35,
-            backgroundColor: Colors.darkGray,
-            width: '95%',
-            height: '90%',
-          }}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Image
-              source={{
-                uri: userInfo?.imageUri,
-              }}
-              style={{width: 100, height: 100, borderRadius: 75}}
-            />
-          </View>
-          <Text style={{color: 'white'}}>Essa</Text>
-        </View>
+      <View style={{margin: 15}}>
+        <SettingsContainer options={AppSettingsButtons} />
+        <SettingsContainer options={AccountSettingsButtons} />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

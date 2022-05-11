@@ -59,7 +59,7 @@ const ChatRoomItem: React.FunctionComponent<Props> = ({chatRoom}) => {
     DataStore.query(Message, chatRoom.chatRoomLastMessageId).then(
       setLastMessage,
     );
-  }, []);
+  }, [chatRoom]);
 
   const newMessages = () => {
     if (chatRoom.newMessages != null) {

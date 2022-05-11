@@ -8,6 +8,17 @@ import {ChatRoom, ChatRoomUser} from '../src/models';
 
 const ChatListScreen: React.FunctionComponent = () => {
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
+  const [chatRoomsUpdated, setChatRoomsUpdated] = useState(false);
+
+  useEffect(() => {
+    const subscription = DataStore.observe(ChatRoom).subscribe(msg => {
+      setChatRoomsUpdated(prevState => !prevState);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchChatRooms = async () => {
@@ -21,13 +32,14 @@ const ChatListScreen: React.FunctionComponent = () => {
       setChatRooms(chatRooms);
     };
     fetchChatRooms();
-  }, []);
+  }, [chatRoomsUpdated]);
 
   return (
     <SafeAreaView style={styles.page}>
       <ChatListScreenHeader />
       <FlatList
         data={chatRooms}
+        keyExtractor={item => item.id}
         renderItem={({item}) => <ChatRoomItem chatRoom={item} />}
         showsVerticalScrollIndicator={false}
       />

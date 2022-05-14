@@ -11,7 +11,7 @@ const ChatListScreen: React.FunctionComponent = () => {
   const [chatRoomsUpdated, setChatRoomsUpdated] = useState(false);
 
   useEffect(() => {
-    const subscription = DataStore.observe(ChatRoom).subscribe(msg => {
+    const subscription = DataStore.observe(ChatRoom).subscribe(() => {
       setChatRoomsUpdated(prevState => !prevState);
     });
 

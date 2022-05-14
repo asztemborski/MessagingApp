@@ -1,63 +1,14 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import SettingsContainer, {
-  Option,
-} from '../components/SettingsContainer/SettingsContainer';
+import SettingsContainer from '../components/SettingsContainer/SettingsContainer';
 import SettingsScreenHeader from '../components/SettingsScreenHeader/SettingsScreenHeader';
 import Colors from '../constants/Colors';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import {
+  AppSettingsButtons,
+  AccountSettingsButtons,
+} from '../assets/SettingOptions';
 
 const SettingsScreen: React.FunctionComponent = () => {
-  const AppSettingsButtons: Array<Option> = [
-    {
-      text: 'Dark Mode',
-      icon: <Ionicons name="moon" size={17} color={'white'} />,
-      iconColor: '#4F5958',
-      type: 'switch',
-    },
-    {
-      text: 'Profile',
-      icon: <MaterialCommunityIcons name="account" size={19} color={'white'} />,
-      iconColor: Colors.green,
-      type: 'navigate',
-    },
-    {
-      text: 'Chat Customize',
-      icon: <Ionicons name="md-chatbubbles" size={17} color={'white'} />,
-      iconColor: '#5871FD',
-      type: 'navigate',
-    },
-    {
-      text: 'Notification',
-      icon: (
-        <MaterialCommunityIcons name="bell-ring" size={17} color={'white'} />
-      ),
-      iconColor: '#F84680',
-      type: 'navigate',
-    },
-    {
-      text: 'Privacy',
-      icon: <MaterialCommunityIcons name="shield" size={17} color={'white'} />,
-      iconColor: '#BB58FD',
-      type: 'navigate',
-    },
-  ];
-
-  const AccountSettingsButtons: Array<Option> = [
-    {
-      text: 'Logout',
-      icon: <MaterialCommunityIcons name="lock" size={17} color={'white'} />,
-      iconColor: '#F4BF3F',
-    },
-    {
-      text: 'Delete Account',
-      icon: <MaterialCommunityIcons name="account" size={19} color={'white'} />,
-      iconColor: '#F96B6D',
-      type: 'navigate',
-    },
-  ];
-
   return (
     <View style={styles.root}>
       <SettingsScreenHeader />

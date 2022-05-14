@@ -44,12 +44,6 @@ const ChatListScreen: React.FunctionComponent = () => {
         renderItem={({item}) => <ChatRoomItem chatRoom={item} />}
         showsVerticalScrollIndicator={false}
       />
-      <Text
-        onPress={() => {
-          Auth.signOut();
-        }}>
-        Logout
-      </Text>
     </SafeAreaView>
   );
 };

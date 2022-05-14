@@ -1,17 +1,12 @@
 import React, {ReactNode} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Colors from '../../constants/Colors';
-import SettingsButton from '../SettingsButton/SettingsButton';
-
-export type Option = {
-  text: string;
-  icon: ReactNode;
-  iconColor: string;
-  type?: 'normal' | 'switch' | 'navigate';
-};
+import SettingsButton, {
+  SettingsButtonProps,
+} from '../SettingsButton/SettingsButton';
 
 interface SettingsContainerProps {
-  options: Array<Option>;
+  options: Array<SettingsButtonProps>;
 }
 
 const SettingsContainer: React.FunctionComponent<SettingsContainerProps> = ({
@@ -19,7 +14,7 @@ const SettingsContainer: React.FunctionComponent<SettingsContainerProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      {options.map((option: Option) => (
+      {options.map((option: SettingsButtonProps) => (
         <SettingsButton
           text={option.text}
           icon={option.icon}

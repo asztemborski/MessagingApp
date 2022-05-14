@@ -5,11 +5,12 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
 import Colors from '../../constants/Colors';
 
-interface SettingsButtonProps {
+export interface SettingsButtonProps {
   text: string;
   icon: ReactNode;
   iconColor: string;
   type?: 'switch' | 'normal' | 'navigate';
+  onPress?: () => void;
 }
 
 const SettingsButton: React.FunctionComponent<SettingsButtonProps> = ({

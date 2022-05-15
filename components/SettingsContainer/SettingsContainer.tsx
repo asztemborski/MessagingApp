@@ -20,6 +20,7 @@ const SettingsContainer: React.FunctionComponent<SettingsContainerProps> = ({
           icon={option.icon}
           iconColor={option.iconColor}
           type={option.type}
+          onPress={option.onPress}
         />
       ))}
     </View>

@@ -52,6 +52,22 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "status": {
+                    "name": "status",
+                    "isArray": false,
+                    "type": {
+                        "enum": "MessageStatus"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "replyToMessageID": {
+                    "name": "replyToMessageID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -129,20 +145,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "LastMessage": {
-                    "name": "LastMessage",
-                    "isArray": false,
-                    "type": {
-                        "model": "Message"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": "id",
-                        "targetName": "chatRoomLastMessageId"
-                    }
-                },
                 "Messages": {
                     "name": "Messages",
                     "isArray": true,
@@ -186,13 +188,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": [],
                     "isReadOnly": true
-                },
-                "chatRoomLastMessageId": {
-                    "name": "chatRoomLastMessageId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
                 }
             },
             "syncable": true,
@@ -278,6 +273,13 @@ export const schema = {
                         "connectionType": "HAS_MANY",
                         "associatedWith": "user"
                     }
+                },
+                "lastOnlineAt": {
+                    "name": "lastOnlineAt",
+                    "isArray": false,
+                    "type": "AWSTimestamp",
+                    "isRequired": false,
+                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -384,7 +386,16 @@ export const schema = {
             ]
         }
     },
-    "enums": {},
+    "enums": {
+        "MessageStatus": {
+            "name": "MessageStatus",
+            "values": [
+                "SENT",
+                "DELIVERED",
+                "READ"
+            ]
+        }
+    },
     "nonModels": {},
-    "version": "6699a16b577de9bdd3f704d31a0016f3"
+    "version": "05a1c9b3e5134a7132fb29cb0acaac2b"
 };

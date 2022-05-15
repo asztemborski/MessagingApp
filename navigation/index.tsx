@@ -14,6 +14,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import ImageViewerScreen from '../screens/ImageViewerScreen';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import ProfileSettingsScreen from '../screens/ProfileSettingsScreen';
 
 export default function Navigation() {
   return (
@@ -29,13 +30,12 @@ export type RootStackParamList = {
   ChatRoomScreen: {id: string};
   CreateChatScreen: undefined;
   ImageViewerScreen: {image: string};
+  ProfileSettingsScreen: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-  const navigation = useNavigation();
-
   return (
     <Stack.Navigator
       screenOptions={{
@@ -47,17 +47,10 @@ function RootNavigator() {
         component={BottomTabNavigator}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name={'ChatRoomScreen'}
         component={ChatRoomScreen}
         options={{headerShown: false}}
-        /*options={({route}) => ({
-          
-          headerTitle: () => <ChatRoomScreenHeader id={route.params?.id} />,
-          headerLeft: () => <BackButton style={{paddingHorizontal: 10}} />,
-          headerTitleContainerStyle: {marginLeft: -10},
-        })}*/
       />
       <Stack.Screen
         name="CreateChatScreen"
@@ -69,6 +62,11 @@ function RootNavigator() {
       <Stack.Screen
         name={'ImageViewerScreen'}
         component={ImageViewerScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={'ProfileSettingsScreen'}
+        component={ProfileSettingsScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

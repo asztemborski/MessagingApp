@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {Text, View} from 'react-native';
+import {Pressable, Text, View} from 'react-native';
 import {Switch} from 'react-native-gesture-handler';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
@@ -18,9 +18,10 @@ const SettingsButton: React.FunctionComponent<SettingsButtonProps> = ({
   icon,
   iconColor,
   type,
+  onPress,
 }) => {
   return (
-    <View style={styles.container}>
+    <Pressable onPress={onPress} style={styles.container}>
       <View style={styles.leftContent}>
         <View style={[styles.iconContainer, {backgroundColor: iconColor}]}>
           {icon}
@@ -44,7 +45,7 @@ const SettingsButton: React.FunctionComponent<SettingsButtonProps> = ({
           />
         )}
       </View>
-    </View>
+    </Pressable>
   );
 };
 export default SettingsButton;

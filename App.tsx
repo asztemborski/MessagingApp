@@ -1,10 +1,12 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {View} from 'react-native';
+import {LogBox, View} from 'react-native';
 import Navigation from './navigation';
 import {Amplify, Auth} from 'aws-amplify';
 import config from './src/aws-exports';
 import {withAuthenticator} from 'aws-amplify-react-native';
+
+LogBox.ignoreAllLogs();
 
 Amplify.configure({
   ...config,

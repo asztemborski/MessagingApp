@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Auth, DataStore} from 'aws-amplify';
 
 import {ActivityIndicator, Image, Text, TextInput, View} from 'react-native';
-import {User} from '../../../src/models';
+import { User } from '../../src/models';
 import styles from './styles';
 
 const ProfileSettings: React.FunctionComponent = () => {

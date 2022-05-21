@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import ProfileSettings from '../components/ProfileSettings/ProfileSettings/ProfileSettings';
-import ProfileSettingsScreenHeader from '../components/ProfileSettings/ProfileSettingsHeader/ProfileSettingsHeader';
+import ProfileSettings from '../components/ProfileSettings/ProfileSettings';
+import ProfileSettingsScreenHeader from '../components/ProfileSettingsHeader/ProfileSettingsHeader';
 import Colors from '../constants/Colors';
 
 const ProfileSettingsScreen: React.FunctionComponent = () => {

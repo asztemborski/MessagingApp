@@ -2,13 +2,25 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Colors from '../../constants/Colors';
 
-const ProfileSettingsScreenHeader: React.FunctionComponent = () => {
+interface Props {
+  onDonePressed: () => void;
+  onUndoPressed: () => void;
+}
+
+const ProfileSettingsScreenHeader: React.FunctionComponent<Props> = ({
+  onDonePressed,
+  onUndoPressed,
+}) => {
   return (
     <View style={styles.root}>
       <Text style={styles.title}>Profile Settings</Text>
       <View style={{flexDirection: 'row'}}>
-        <Text style={styles.text}>Undo</Text>
-        <Text style={styles.text}>Done</Text>
+        <Text onPress={onUndoPressed} style={styles.text}>
+          Undo
+        </Text>
+        <Text onPress={onDonePressed} style={styles.text}>
+          Done
+        </Text>
       </View>
     </View>
   );

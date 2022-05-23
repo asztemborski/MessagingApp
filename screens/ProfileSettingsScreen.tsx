@@ -7,10 +7,7 @@ import Colors from '../constants/Colors';
 const ProfileSettingsScreen: React.FunctionComponent = () => {
   return (
     <View style={styles.root}>
-      <ProfileSettingsScreenHeader />
-      <View style={{margin: 15}}>
-        <ProfileSettings />
-      </View>
+      <ProfileSettings />
     </View>
   );
 };
